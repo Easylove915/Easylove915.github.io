@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eNSP 排障助手 · PRD（脱敏版）· 王雁鹏</title>
+<meta name="description" content="eNSP 排障助手的产品需求文档（脱敏版）：背景、目标与非目标、核心流程、风险分级规则、验收标准与评测口径。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eNSP 排障助手 · PRD（脱敏版）">
+<meta property="og:description" content="一份写给执行者的 PRD：目标与非目标、核心流程、状态机、风险分级、验收标准与评测口径。">
+<meta property="og:image" content="assets/og.jpg">
+<meta name="theme-color" content="#0a2231">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2325414A'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23DCEFEA' stroke-width='1.5'/></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-inner glass glass-nav">
+    <a class="brand" href="index.html">WANG YANPENG</a>
+    <nav aria-label="主要导航">
+      <a href="project-ensp.html">← 返回案例</a>
+      <a href="index.html#projects">全部案例</a>
+    </nav>
+    <a class="btn btn-glass" href="mailto:2748916664@qq.com">联系我 <span class="arw">↗</span></a>
+  </div>
+</header>
+
+<main class="doc-wrap">
+  <article class="doc">
+
+    <header class="doc-head">
+      <p class="doc-kicker">PRODUCT REQUIREMENTS DOCUMENT · 脱敏版</p>
+      <h1>eNSP 排障助手</h1>
+      <p class="doc-sub">面向网络实验课学生的多模态排障助手 —— 从“现象”定位到“根因”，每条根因给一条可以直接粘进 CLI 的验证命令。</p>
+      <dl class="doc-meta">
+        <div><dt>版本</dt><dd>v0.2</dd></div>
+        <div><dt>时间</dt><dd>2026.10—11</dd></div>
+        <div><dt>作者</dt><dd>王雁鹏（产品设计 + 独立开发）</dd></div>
+        <div><dt>状态</dt><dd>已实现 · 已评测 · 本地 demo</dd></div>
+      </dl>
+    </header>
+
+    <section>
+      <h2>1. 背景与问题</h2>
+      <p>网络实验课的学生在 eNSP 里配不通时，缺的不是资料，而是“先试哪个、哪个有风险”。</p>
+      <p>我拆了两份主流的 eNSP 资料，<strong>约 90% 的篇幅在讲安装和汉化</strong>；真正卡住人的配置故障（Trunk 不通、OSPF 邻居起不来）几乎空白。而通用大模型给的答案是“步骤罗列”——不知道先试哪个，也不知道哪些操作有风险。</p>
+      <p class="doc-quote">问题定义：把“资料不够”改成“缺少按现象排序、带风险等级的验证路径”。</p>
+    </section>
+
+    <section>
+      <h2>2. 目标与非目标</h2>
+      <div class="doc-cols">
+        <div>
+          <h3>目标</h3>
+          <ul>
+            <li>贴一张报错截图、或写一句话现象，给出按概率排序的候选根因。</li>
+            <li>每条根因配一条<strong>可直接执行的验证命令</strong>与<strong>风险等级</strong>。</li>
+            <li>信息不足时先追问缺失信息，而不是硬给一个答案。</li>
+            <li>把“已排除 / 已试无效”变成结构化记录，逐段收敛。</li>
+          </ul>
+        </div>
+        <div>
+          <h3>非目标</h3>
+          <ul>
+            <li>不做“知识库问答”，不做资料汇总。</li>
+            <li>不自动修改用户配置，不替代动手。</li>
+            <li>不承诺“唯一正确答案”。</li>
+            <li>不替代实验课与老师。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 用户与场景</h2>
+      <table class="doc-table">
+        <tr><th>用户</th><td>网络实验课学生 / 自学 eNSP 的初学者</td></tr>
+        <tr><th>场景</th><td>实验课或自学时交换机不通，手上只有一张报错截图，或一句“Trunk 都配了，VLAN 10 还是不通”</td></tr>
+        <tr><th>环境</th><td>本地演示版：Python 单文件服务 + 多模态模型（qwen3-vl-plus），不依赖云端账号</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 核心流程</h2>
+      <ol class="doc-flow">
+        <li><strong>输入</strong> 报错截图 / CLI 回显 / 一句话现象。</li>
+        <li><strong>现象识别</strong> 标注场景（安装 / 配置 / 协议）、置信度、信息是否充足。</li>
+        <li><strong>候选根因</strong> 按概率从高到低排列，每条带风险等级与验证命令。</li>
+        <li><strong>用户反馈</strong> 「就是它」/「试过没用」/「排除」，链往下走一段。</li>
+        <li><strong>收敛</strong> 排除记录结构化回灌，直到定位或给出结论。</li>
+      </ol>
+      <p class="doc-note">关键设计：排除是“一段一段走”，不是“一次给全”。每次只让用户做一件事，做完再给下一段。</p>
+    </section>
+
+    <section>
+      <h2>5. 关键规则</h2>
+      <table class="doc-table">
+        <tr><th>风险分级</th><td>安全 / 需备份 / 高风险 —— 每条根因必须标注，竞品把「改 BIOS」与「删注册表」平级罗列是反例</td></tr>
+        <tr><th>信息不足</th><td>先问缺的那几句（哪个接口配了 Trunk、两台是否都建了 VLAN），不给结论</td></tr>
+        <tr><th>排除记录</th><td>写成结构化清单回灌模型，不依赖聊天历史；实测连排 4 条后仍能换出新方向</td></tr>
+        <tr><th>领域事实</th><td>如 eNSP 只认 VirtualBox 5.2.x —— 用知识卡注入 + 回归断言，不指望提示词消除幻觉</td></tr>
+      </table>
+    </section>
+
+    <section>
+      <h2>6. 验收标准</h2>
+      <ul class="doc-check">
+        <li>每条根因必须给出可粘贴执行的 CLI 验证命令，不接受“去检查一下配置”这类空话。</li>
+        <li>现象识别必须同时给出置信度与信息完整性判断。</li>
+        <li>连续排除 4 条后仍能给出新方向（作为回归用例保留）。</li>
+        <li>补 6 张知识卡后，「现象描述」类满分率从 0% 提升到 78%，整体 31% → 50%。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>7. 评测口径</h2>
+      <p>30 条评测集 × 5 类（含「信息不足」「误导陷阱」）× 3 次重复 = <strong>90 次作答</strong>。判分故意换厂商，先用 2/1/0 已知答案校准，再以语义判断替代关键词匹配。</p>
+      <p class="doc-note">每类只有 6 条，样本小，结论只作为方向判断，不作为效果承诺。</p>
+    </section>
+
+    <section>
+      <h2>8. 边界与公开说明</h2>
+      <ul class="doc-check">
+        <li>当前是本地 demo v0.2，不是生产系统。</li>
+        <li>公开版不含真实设备、账号与报错截图，示例数据均为合成。</li>
+        <li>不提供自动修复，所有改动由用户确认后自行执行。</li>
+      </ul>
+    </section>
+
+    <footer class="doc-foot">
+      <a href="project-ensp.html">← 回到案例页</a>
+      <span>脱敏版 · 结构与口径来自真实项目文档</span>
+    </footer>
+
+  </article>
+</main>
+
+<script>
+  const bar = document.getElementById('topbar');
+  addEventListener('scroll', () => bar.classList.toggle('is-solid', window.scrollY > 80), { passive: true });
+</script>
+</body>
+</html>

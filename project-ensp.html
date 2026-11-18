@@ -96,6 +96,57 @@
         </section>
 
         <section>
+          <h2>评测集怎么建的</h2>
+          <p>30 条评测集按 5 类拆开，每类 6 条，每条跑 3 次——同一套问题重复测，才能区分“偶然答对”和“稳定答对”。</p>
+          <table class="eval-table">
+            <colgroup><col style="width:19%"><col style="width:7%"><col style="width:24%"><col style="width:29%"><col style="width:10.5%"><col style="width:10.5%"></colgroup>
+            <thead>
+              <tr><th>类别</th><th>条数</th><th>考察什么</th><th>判分口径</th><th>首轮</th><th>补知识卡后</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>现象描述（定位类）</td><td class="num-cell">6</td>
+                <td>从一句现象能否定位到根因</td>
+                <td>根因命中 + 验证命令可执行 + 风险标注正确</td>
+                <td class="num-cell">0%</td><td class="num-cell">78%</td>
+              </tr>
+              <tr>
+                <td>安装与启动</td><td class="num-cell">6</td>
+                <td>版本、路径、依赖类问题</td>
+                <td>同上</td>
+                <td class="num-cell">—</td><td class="num-cell">—</td>
+              </tr>
+              <tr>
+                <td>配置与协议</td><td class="num-cell">6</td>
+                <td>Trunk、VLAN、OSPF 等配置故障</td>
+                <td>同上</td>
+                <td class="num-cell">—</td><td class="num-cell">—</td>
+              </tr>
+              <tr>
+                <td>信息不足</td><td class="num-cell">6</td>
+                <td>该追问时是否追问，而不是硬答</td>
+                <td>追问项覆盖率</td>
+                <td class="num-cell">—</td><td class="num-cell">—</td>
+              </tr>
+              <tr>
+                <td>误导陷阱</td><td class="num-cell">6</td>
+                <td>是否被错误前提带偏</td>
+                <td>识破并纠正计满分</td>
+                <td class="num-cell">—</td><td class="num-cell">—</td>
+              </tr>
+              <tr class="eval-total">
+                <td>合计</td><td class="num-cell">30</td>
+                <td>× 3 次重复 = 90 次作答</td>
+                <td>整体满分率</td>
+                <td class="num-cell">31%</td><td class="num-cell">50%</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="muted" style="font-size:12px;margin-top:0">每类只有 6 条，样本小，结论只作方向判断，不作为效果承诺。</p>
+          <p style="margin-top:18px"><a class="btn btn-glass" href="prd-ensp.html">看完整 PRD（脱敏版）<span class="arw">↗</span></a></p>
+        </section>
+
+        <section>
           <h2>界面截图</h2>
           <div class="shots">
             <figure class="shot">

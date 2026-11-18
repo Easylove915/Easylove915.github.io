@@ -6,11 +6,12 @@
 ## 文件
 
 ```
-index.html            首页（首屏 + 两个案例 + 能力 + 联系）
-project-ensp.html     案例 01：eNSP 排障助手
+index.html            首页（首屏 + 关于 + 两个案例 + 能力 + 联系）
+project-ensp.html     案例 01：eNSP 排障助手（含评测集表格）
 project-jd.html       案例 02：投递决策器
+prd-ensp.html         过程物：eNSP 的 PRD（脱敏版，文档样式）
 style.css             全站样式（设计令牌都在顶部 :root）
-assets/               图片：场景照片、界面截图、玻璃折射贴图、分享图
+assets/               图片（场景照片、界面截图、玻璃折射贴图、分享图）+ 简历 resume.pdf
 ```
 
 ## 本地打开
