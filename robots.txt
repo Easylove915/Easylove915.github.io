@@ -1,0 +1,8 @@
+# 王雁鹏 · AI 产品作品集
+# 允许所有搜索引擎抓取；页面本身不含隐私数据
+
+User-agent: *
+Allow: /
+
+# 部署到你自己的域名后，把下面一行取消注释并换成实际地址
+# Sitemap: https://your-domain.example/sitemap.xml

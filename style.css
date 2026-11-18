@@ -900,3 +900,27 @@ section[id],h2[id]{scroll-margin-top:110px}
 .cap-ev a:hover .arw{transform:translate(2px,-2px); opacity:1}
 .cap-ev + .cap-ev{margin-top:0}
 .cap-card p{margin-bottom:14px !important}
+/* ---------- 404 ---------- */
+.notfound{
+  min-height:100svh; display:grid; grid-template-columns:minmax(0,1fr); place-items:center;
+  padding:clamp(96px,12vh,140px) var(--sp-24) clamp(56px,8vh,96px);
+}
+.nf-panel{
+  width:100%; max-width:620px; padding:clamp(28px,4.2vw,52px);
+  border-radius:var(--radius-sheet);
+  border:1px solid rgba(255,255,255,.22);
+  background:rgba(7,26,38,.72);
+  -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+  box-shadow:0 30px 80px rgba(3,16,24,.5), inset 0 1px 0 rgba(255,255,255,.14);
+}
+.nf-code{
+  margin:14px 0 0; font-family:var(--font-num); font-variant-numeric:lining-nums tabular-nums;
+  font-size:clamp(64px,11vw,124px); line-height:.95; letter-spacing:-.04em; color:#fff;
+}
+.nf-title{
+  margin:6px 0 12px; font-family:var(--font-display); font-weight:400;
+  font-size:clamp(21px,2.4vw,30px); line-height:1.35; color:#fff;
+}
+.nf-text{margin:0 0 26px; font-size:14.5px; line-height:1.8; color:var(--ink-soft); max-width:32em}
+.nf-actions{display:flex; flex-wrap:wrap; gap:12px}
+@media (max-width:640px){ .nf-panel{padding:24px 20px} .nf-code{font-size:72px} }
