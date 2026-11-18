@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>王雁鹏 · AI 产品实习生｜作品集</title>
+<meta name="description" content="王雁鹏的作品集：两个 0→1 的 AI 产品——eNSP 排障助手与投递决策器。从用户研究、PRD 到评测口径，用数据判断一次改动是否有效。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="王雁鹏 · AI 产品实习生｜作品集">
+<meta property="og:description" content="两个 0→1 的 AI 产品：eNSP 排障助手与投递决策器。从用户研究、PRD 到评测口径，用数据判断一次改动是否有效。">
+<meta property="og:image" content="assets/og.jpg">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a2231">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2325414A'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23DCEFEA' stroke-width='1.5'/></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<!-- 液态玻璃折射滤镜 -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="lensNav" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-nav.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lensBtn" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-btn.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lensPanel" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-panel.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lensSquare" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-square.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-inner glass glass-nav">
+    <a class="brand" href="index.html">WANG YANPENG</a>
+    <nav aria-label="主要导航">
+      <a href="#about">关于</a>
+      <a href="#projects">案例</a>
+      <a href="#skills">能力</a>
+      <a href="#contact">联系</a>
+    </nav>
+    <a class="btn btn-glass" href="mailto:2748916664@qq.com">联系我 <span class="arw">↗</span></a>
+  </div>
+</header>
+
+<main>
+  <!-- 首屏场景 -->
+  <section class="hero">
+    <div class="page">
+      <div class="scene scene--photo">
+        <!-- 场景照片来自 StyleKit 液态玻璃展示页的示例素材（冰川）。换成你自己的照片时替换 assets/scene-glacier.webp。 -->
+
+        <div class="hero-copy glass-panel">
+          <p class="label hero-eyebrow">AI 产品实习生 · <span class="num">2027</span> 届 · 一周内可到岗</p>
+          <h1 class="display">把模糊的问题，<br>做成<span class="accent">能被验收</span>的产品。</h1>
+          <p class="hero-lede body-lg">两个 AI 产品从 <span class="num">0</span> 到 <span class="num">1</span> 由我独立完成：先用访谈和资料把问题定位到具体场景，再定义机制与验收标准，最后用评测集判断这一版到底有没有变好。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#projects">看两个案例 <span class="arw">↗</span></a>
+            <a class="btn btn-glass" href="mailto:2748916664@qq.com">聊聊实习机会 <span class="arw">→</span></a>
+          </div>
+        </div>
+
+        <aside class="hero-facts glass glass-square glass--onphoto" aria-label="项目数据">
+          <div><b>90</b><span>次评测作答</span></div>
+          <div><b>238</b><span>项单测回归</span></div>
+          <div><b>2</b><span>个 0→1 项目</span></div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- 关于 -->
+  <section class="section about" id="about">
+    <div class="page">
+      <span class="label">ABOUT / 01</span>
+      <p class="about-text">我是王雁鹏，<span class="num">2027</span> 届本科，在找 AI 产品实习。两个 AI 产品从 <span class="num">0</span> 到 <span class="num">1</span> 独立完成：先定位真实问题，再写 PRD 与验收标准，用评测集判断这一版有没有变好。<span class="nowrap">与其说</span>「感觉好多了」，不如拿出一组能对上的数。</p>
+    </div>
+  </section>
+
+  <!-- 案例 -->
+  <section class="section" id="projects">
+    <div class="page">
+      <div class="section-head">
+        <div>
+          <span class="label">CASE STUDY / 02</span>
+          <h2 class="heading-lg">两个案例，同一套产品方法</h2>
+        </div>
+        <p class="muted">从问题定位、产品定义到评测口径，每个案例都写清楚：解决什么问题、机制怎么设计、用什么证据证明有效、以及它明确不做什么。</p>
+      </div>
+
+      <div class="cases">
+        <article class="case">
+          <div class="case-top">
+            <span class="case-no">01</span>
+            <span class="case-kind">产品设计 + 独立开发 · 0→1</span>
+            <span class="case-date">2026.10—11</span>
+          </div>
+          <div class="case-grid">
+            <div class="case-copy">
+              <h3 class="case-title">eNSP 排障助手</h3>
+              <p class="case-desc">面向网络实验课学生的多模态排障助手：贴上报错截图，得到按概率排序、按风险分级的排查路径；信息不足时先追问，而不是硬给一个答案。</p>
+              <dl class="case-stats">
+                <div><dt>90</dt><dd>次评测作答</dd></div>
+                <div><dt>0<span class="num-arrow">→</span>78%</dt><dd>定位类满分率</dd></div>
+                <div><dt>6</dt><dd>张领域知识卡</dd></div>
+              </dl>
+              <ul class="case-tags">
+                <li>用户研究</li><li>机制设计</li><li>评测口径</li><li>Python 单文件</li><li>qwen3-vl-plus</li>
+              </ul>
+            </div>
+            <figure class="case-shot">
+              <img src="assets/shot-ensp-home.webp" alt="eNSP 排障助手界面：贴报错截图后按概率排出的排查路径" loading="lazy" decoding="async">
+            </figure>
+          </div>
+          <a class="case-link" href="project-ensp.html"><span>查看项目案例</span><span class="arw">↗</span></a>
+        </article>
+
+        <article class="case case--flip">
+          <div class="case-top">
+            <span class="case-no">02</span>
+            <span class="case-kind">产品设计 + 独立开发 · 0→1</span>
+            <span class="case-date">2026.11</span>
+          </div>
+          <div class="case-grid">
+            <div class="case-copy">
+              <h3 class="case-title">投递决策器</h3>
+              <p class="case-desc">粘贴 JD 与简历，回答三件事：这个岗投不投、面试会在哪里被问穿、有多少条可核对的事实；判不了的部分，照实说“判不了”。</p>
+              <dl class="case-stats">
+                <div><dt>238</dt><dd>项单测</dd></div>
+                <div><dt>20</dt><dd>个规则模块</dd></div>
+                <div><dt>4</dt><dd>组 JD 基线</dd></div>
+              </dl>
+              <ul class="case-tags">
+                <li>需求拆解</li><li>规则引擎</li><li>防编造</li><li>Node.js 零依赖</li><li>通义千问</li>
+              </ul>
+            </div>
+            <figure class="case-shot">
+              <img src="assets/shot-jd-result.webp" alt="投递决策器界面：判「别投」后的证据覆盖与面试追问" loading="lazy" decoding="async">
+            </figure>
+          </div>
+          <a class="case-link" href="project-jd.html"><span>查看项目案例</span><span class="arw">↗</span></a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 能力 -->
+  <section class="section" id="skills">
+    <div class="page">
+      <div class="section-head">
+        <div>
+          <span class="label">CAPABILITIES / 03</span>
+          <h2 class="heading-lg">我做事的方式</h2>
+        </div>
+        <p class="muted">不按工具命名能力，按它能推动的决策和结果命名。</p>
+      </div>
+
+      <div class="flow" aria-label="产品工作流">
+        <span>用户研究</span><i>→</i>
+        <span>问题定义</span><i>→</i>
+        <span>PRD 与原型</span><i>→</i>
+        <span>评测与迭代</span><i>→</i>
+        <span>交付与复盘</span>
+      </div>
+
+      <div class="cap-grid">
+        <div class="aside-card"><h3>问题定位</h3><p class="muted" style="margin:0">先把资料和访谈拆到“学生真正卡在哪”，再决定做什么；不先写功能。</p></div>
+        <div class="aside-card"><h3>机制设计</h3><p class="muted" style="margin:0">用规则、结构化约束和人工确认兜底，而不是指望模型自觉。</p></div>
+        <div class="aside-card"><h3>评测口径</h3><p class="muted" style="margin:0">建评测集、校准判分、重复取值报区间，用命中率判断改动是否有效。</p></div>
+        <div class="aside-card"><h3>工程落地</h3><p class="muted" style="margin:0">零依赖单文件也能跑，写成纯函数模块，配单测和回归基线。</p></div>
+      </div>
+
+      <div class="role-strip">
+        <span class="label">岗位匹配</span>
+        <ul class="role-chips">
+          <li>AI 产品实习生</li>
+          <li>AI Agent 产品方向</li>
+          <li>体验度量 / 评测设计</li>
+          <li>2027 届 · 本科</li>
+          <li>一周内可到岗 · 可全职</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 联系 -->
+  <section class="section" id="contact">
+    <div class="page">
+      <div class="contact">
+        <div>
+          <h2 class="heading-lg">想看更细的过程，<br>或者聊聊实习机会。</h2>
+          <p>我一周内可以到岗，也能全职投入。两个案例的过程、评测数据和边界都可以当面拆开讲。</p>
+        </div>
+        <div class="contact-actions">
+          <a class="btn btn-primary" href="mailto:2748916664@qq.com">发邮件 <span class="arw">↗</span></a>
+          <a class="btn btn-glass" href="tel:15238212663">打电话</a>
+        </div>
+      </div>
+      <footer>
+        <span>© 2026 王雁鹏 · AI 产品作品集</span>
+        <span>用评测说话</span>
+      </footer>
+    </div>
+  </section>
+</main>
+
+<script>
+  const bar = document.getElementById('topbar');
+  const hero = document.querySelector('.hero');
+  const onScroll = () => {
+    const solid = window.scrollY > hero.offsetHeight - 140;
+    bar.classList.toggle('is-solid', solid);
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // 键盘用户：跳到主要内容后顶部导航保持可见
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      history.replaceState(null, '', a.getAttribute('href'));
+    });
+  });
+</script>
+</body>
+</html>

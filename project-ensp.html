@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>eNSP 排障助手 · 王雁鹏</title>
+<meta name="description" content="面向网络实验课学生的多模态排障助手：贴报错截图得到按概率排序、按风险分级的排查路径。含 90 次评测作答与 0%→78% 的知识卡实验。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="eNSP 排障助手 · 王雁鹏">
+<meta property="og:description" content="多模态排障助手：贴报错截图，得到按概率排序、按风险分级的排查路径。90 次评测作答，定位类满分率 0→78%。">
+<meta property="og:image" content="assets/og.jpg">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a2231">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2325414A'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23DCEFEA' stroke-width='1.5'/></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="lensNav" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-nav.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lensBtn" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-btn.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-inner glass glass-nav">
+    <a class="brand" href="index.html">WANG YANPENG</a>
+    <nav aria-label="主要导航">
+      <a href="index.html#projects">项目</a>
+      <a href="index.html#skills">能力</a>
+      <a href="index.html#contact">联系</a>
+    </nav>
+    <a class="btn btn-glass" href="mailto:2748916664@qq.com">联系我 <span class="arw">↗</span></a>
+  </div>
+</header>
+
+<main>
+  <section class="detail-hero">
+    <div class="page">
+      <div class="scene scene--photo">
+        <img class="scene-photo" src="assets/scene-coast.webp" alt="" aria-hidden="true" decoding="async" style="object-position:50% 82%">
+        <div class="scene-scrim" aria-hidden="true"></div>
+        <div class="grain" aria-hidden="true"></div>
+
+        <div class="detail-copy glass-panel">
+          <span class="label">PROJECT 01 / AI AGENT</span>
+          <h1 class="heading-lg">eNSP 排障助手</h1>
+          <p class="lede body-lg">面向网络实验课学生的多模态排障助手：贴上报错截图，得到按概率排序、按风险分级的排查路径；信息不足时先追问，而不是硬给一个答案。</p>
+          <div class="detail-meta">
+            <span>2026.10—11</span><span>独立完成 0→1</span><span>Agent / 评测设计</span><span>Python 单文件服务</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page">
+    <div class="detail">
+      <div class="detail-main">
+        <section>
+          <h2>它解决什么</h2>
+          <p>学生在 eNSP 里配不通时，缺的不是资料，而是“先试哪个、哪个有风险”。当时的 eNSP 资料里，约 90% 的篇幅在讲安装和汉化，真正卡住人的配置故障几乎空白。</p>
+          <p>所以我把它从“资料汇总”改成“按现象定位原因”：用户描述现象（或贴报错图），它给出几条可能的根因，按概率排序，并给每条根因配一个能立刻做的验证动作。</p>
+        </section>
+
+        <section>
+          <h2>怎么做的</h2>
+          <ul>
+            <li><strong>先收范围。</strong>拆完两份现有资料后确认 90% 是安装类问题，于是不做“知识库问答”，只做“按现象定位原因”。</li>
+            <li><strong>把风险写进答案。</strong>竞品把「改 BIOS」和「删注册表」平级罗列，用户不知道哪个能碰；这里每条根因并排给出风险等级（安全 / 需备份 / 高风险）与可执行验证方法。</li>
+            <li><strong>不指望提示词消幻觉。</strong>实测模型会把 VirtualBox 版本说反（eNSP 只认 5.2.x），于是改为注入领域事实 + 回归断言。</li>
+            <li><strong>把闲聊变成收敛。</strong>把「已排除 / 已试无效」重写成结构化清单回灌模型，连排除 4 条后它仍能在第 4 轮换出新方向。</li>
+            <li><strong>自己建评测集。</strong>30 条 × 5 类（含“信息不足”“误导陷阱”）× 3 次重复 = 90 次作答；判分故意换厂商、先用 2/1/0 已知答案校准，用语义判断替代关键词匹配。</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>证据</h2>
+          <div class="evidence">
+            <div><b>90</b><span>次评测作答（30 条 × 3 次重复）</span></div>
+            <div><b>0<span class="num-arrow">→</span>78%</b><span>补 6 张知识卡后，定位类满分率</span></div>
+            <div><b>31<span class="num-arrow">→</span>50%</b><span>整体满分率的变化</span></div>
+          </div>
+          <p style="margin-top:16px">定位「现象描述」类的 18 次作答里，0 次满分——先确认这是知识缺失而不是模型能力问题，再补 6 张知识卡片，该类从 0% 到 78%，整体从 31% 到 50%，口语化变体重测 78% 没有下降。</p>
+          <p>我也没有因为它“更高级”就留下 Agent 化方案：实测 50%→46%，主动移除，不因为已经投入就留着。</p>
+        </section>
+
+        <section>
+          <h2>界面截图</h2>
+          <div class="shots">
+            <figure class="shot">
+              <img src="assets/shot-ensp-home.webp" alt="eNSP 排障助手首页：贴一张报错截图" loading="lazy" decoding="async">
+              <figcaption>首页：贴一张截图、或只写一句现象；先标出场景、置信度、信息够不够，再往下走。</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/shot-ensp-empty.webp" alt="排查链的空状态与三个示例现象" loading="lazy" decoding="async">
+              <figcaption>空状态：排查链还没开始；下方三个示例覆盖安装、配置、协议三类典型故障。</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/shot-ensp-chain.webp" alt="排查到第 2 轮：两条候选根因与待补信息" loading="lazy" decoding="async">
+              <figcaption>第 2 轮：现象已确认，给出两条候选根因，每条配可直接粘进 CLI 的验证命令与风险等级；下方自动列出还缺哪几句信息。</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/shot-ensp-how.webp" alt="怎么工作：Trunk 通了但 VLAN 10 没放行的拓扑示意" loading="lazy" decoding="async">
+              <figcaption>「怎么工作」：用一张拓扑讲清典型场景——Trunk 是通的，但 VLAN 10 没放行。</figcaption>
+            </figure>
+          </div>
+          <p class="muted" style="font-size:12px;margin-top:8px">截图来自本地 demo v0.2 的示例数据，不含真实设备与账号信息。</p>
+        </section>
+
+        <section class="callout">
+          <h2>它不做什么</h2>
+          <p>不是自动维修系统，不会替用户改配置；不承诺“唯一正确答案”，只给按概率排序、带风险等级的路径；不替代实验课和老师。公开版只用脱敏案例。</p>
+        </section>
+      </div>
+
+      <aside class="detail-aside">
+        <div class="aside-card">
+          <h3>一页摘要</h3>
+          <dl>
+            <dt>角色</dt><dd>产品设计 + 独立开发</dd>
+            <dt>时间</dt><dd>2026.10—11</dd>
+            <dt>形态</dt><dd>多模态 Agent</dd>
+            <dt>栈</dt><dd>Python 标准库单文件 / qwen3-vl-plus / 跨厂商判分</dd>
+          </dl>
+        </div>
+        <div class="aside-card">
+          <h3>关键数字</h3>
+          <div class="big">78%</div>
+          <div class="cap">定位类满分率（补知识卡后）</div>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="pager" aria-label="翻页">
+      <a href="index.html">← 返回作品集</a>
+      <a class="next" href="project-jd.html">下一个：投递决策器 →</a>
+    </nav>
+
+    <footer>
+      <span>© 2026 王雁鹏 · AI 产品作品集</span>
+      <span>用评测说话</span>
+    </footer>
+  </div>
+</main>
+
+<script>
+  const bar = document.getElementById('topbar');
+  const scene = document.querySelector('.detail-hero');
+  const onScroll = () => bar.classList.toggle('is-solid', window.scrollY > scene.offsetHeight - 120);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>
+</body>
+</html>

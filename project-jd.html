@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>投递决策器 · 王雁鹏</title>
+<meta name="description" content="粘贴 JD 与简历，回答三件事：投不投、面试会在哪里被问穿、有多少条可核对的事实。20 个纯函数规则模块、238 项单测、4 组 JD 回归基线。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="投递决策器 · 王雁鹏">
+<meta property="og:description" content="粘贴 JD 与简历，回答投不投、面试会在哪被问穿、有多少条可核对的事实。20 个规则模块、238 项单测。">
+<meta property="og:image" content="assets/og.jpg">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0a2231">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2325414A'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23DCEFEA' stroke-width='1.5'/></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <filter id="lensNav" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-nav.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="34" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <filter id="lensBtn" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
+      <feImage href="assets/lens-btn.png" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+      <feDisplacementMap in="SourceGraphic" in2="map" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+  </defs>
+</svg>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-inner glass glass-nav">
+    <a class="brand" href="index.html">WANG YANPENG</a>
+    <nav aria-label="主要导航">
+      <a href="index.html#projects">项目</a>
+      <a href="index.html#skills">能力</a>
+      <a href="index.html#contact">联系</a>
+    </nav>
+    <a class="btn btn-glass" href="mailto:2748916664@qq.com">联系我 <span class="arw">↗</span></a>
+  </div>
+</header>
+
+<main>
+  <section class="detail-hero">
+    <div class="page">
+      <div class="scene scene--photo">
+        <img class="scene-photo" src="assets/scene-mountain.webp" alt="" aria-hidden="true" decoding="async">
+        <div class="scene-scrim" aria-hidden="true"></div>
+        <div class="grain" aria-hidden="true"></div>
+
+        <div class="detail-copy glass-panel">
+          <span class="label">PROJECT 02 / DECISION TOOL</span>
+          <h1 class="heading-lg">投递决策器</h1>
+          <p class="lede body-lg">粘贴 JD 与简历，直接回答三件事：这个岗投不投、面试会在哪里被问穿、有多少条可核对的事实。判不了的部分，照实说“判不了”。</p>
+          <div class="detail-meta">
+            <span>2026.11</span><span>独立完成 0→1</span><span>规则引擎 / 防编造</span><span>Node.js 零依赖</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="page">
+    <div class="detail">
+      <div class="detail-main">
+        <section>
+          <h2>它解决什么</h2>
+          <p>应届生投简历时真正要判断的不是“我有多匹配”，而是三件能立刻行动的事：这个岗值不值得投、面试会在哪被问穿、我有哪些能核对的事实。市面上的工具给一个“对齐度 37 分”，用户拿着这个数既做不了决定，还容易误读成录用率。</p>
+        </section>
+
+        <section>
+          <h2>怎么做的</h2>
+          <ul>
+            <li><strong>推翻自己的输出层。</strong>首版主输出是“对齐度 37 分”，内测发现没人能据此决策；引擎一行未改，只重做输出层，换成投递决策 / 面试追问 / 事实账本三件能直接行动的产物。</li>
+            <li><strong>把两件事拆开。</strong>“做过类似的事吗”和“够不够格”是两层：学历、届别、到岗天数、实习时长单独做二元校验，任一不符直接判“别投”，因为改简历救不了。</li>
+            <li><strong>画对劝退线。</strong>首版按 3 条缺口就劝退，会让人放弃本可拿到的机会；改成只差一两条一律给“改一版再投”，硬性要求一半以上零证据才“别投”。抽不到的条件记“没写”，不记“不满足”。</li>
+            <li><strong>防编造。</strong>把事实编译成编号白名单随提示词下发，做“白名单 × 申报 × 实际文本”三方对账；申报不存在的编号即判编造、直接拦截。</li>
+            <li><strong>别把过严当正确。</strong>真机验证发现过严会误毙 3 条合格改写，据此收窄口径；四组 JD 跑分钉成回归基线，238 项单测全过。</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>证据</h2>
+          <div class="evidence">
+            <div><b>238</b><span>项单测，全部通过</span></div>
+            <div><b>20</b><span>个纯函数规则模块</span></div>
+            <div><b>4</b><span>组 JD 回归基线</span></div>
+          </div>
+          <p style="margin-top:16px">另外修掉了一个“伪装成功”：OCR 长图退化到只出检测框，原先的清洗逻辑却把它变成一屏 90 分——现在这种情况会明确失败，而不是看起来成功。</p>
+          <p>规则引擎是纯函数，不联网也能出完整报告；模型只负责改写与 OCR，判断不交给它。</p>
+        </section>
+
+        <section>
+          <h2>界面截图</h2>
+          <div class="shots">
+            <figure class="shot">
+              <img src="assets/shot-jd-empty.webp" alt="投递决策器的初始界面：输入、决策、面试与建议三栏" loading="lazy" decoding="async">
+              <figcaption>初始状态：左边贴 JD 与简历（文字只留在本机），中间给决策，右边按风险排面试追问。</figcaption>
+            </figure>
+            <figure class="shot">
+              <img src="assets/shot-jd-result.webp" alt="判「别投」的结果页：证据覆盖、硬性条件核对与必被追问" loading="lazy" decoding="async">
+              <figcaption>判「别投」时：先给结论，再逐条列硬性条件、证据覆盖和三条判不了的地方；右边是 5 条必被追问，每条都写清「卡在哪」和「怎么答」。</figcaption>
+            </figure>
+          </div>
+          <p class="muted" style="font-size:12px;margin-top:8px">截图来自本地运行版本，岗位与简历为示例数据。</p>
+        </section>
+
+        <section class="callout">
+          <h2>它不做什么</h2>
+          <p>不替用户编经历；不猜“没写”的条件；不给录用概率，只给能不能投和该补什么；不把关卡判断交给模型。</p>
+        </section>
+      </div>
+
+      <aside class="detail-aside">
+        <div class="aside-card">
+          <h3>一页摘要</h3>
+          <dl>
+            <dt>角色</dt><dd>产品设计 + 独立开发</dd>
+            <dt>时间</dt><dd>2026.11</dd>
+            <dt>形态</dt><dd>规则引擎 + LLM 改写</dd>
+            <dt>栈</dt><dd>Node.js 标准库 / 通义千问 / 238 项单测</dd>
+          </dl>
+        </div>
+        <div class="aside-card">
+          <h3>关键数字</h3>
+          <div class="big">238</div>
+          <div class="cap">项单测，改规则必跑</div>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="pager" aria-label="翻页">
+      <a href="project-ensp.html">← 上一个：eNSP 排障助手</a>
+      <a class="next" href="index.html">返回作品集 →</a>
+    </nav>
+
+    <footer>
+      <span>© 2026 王雁鹏 · AI 产品作品集</span>
+      <span>用评测说话</span>
+    </footer>
+  </div>
+</main>
+
+<script>
+  const bar = document.getElementById('topbar');
+  const scene = document.querySelector('.detail-hero');
+  const onScroll = () => bar.classList.toggle('is-solid', window.scrollY > scene.offsetHeight - 120);
+  addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>
+</body>
+</html>
