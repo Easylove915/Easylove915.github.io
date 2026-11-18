@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>投递决策器 · PRD（脱敏版）· 王雁鹏</title>
+<meta name="description" content="投递决策器的精简 PRD：规则引擎与模型的责任边界、硬性条件二元校验、证据覆盖与防编造校验、验收标准。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="投递决策器 · PRD（脱敏版）">
+<meta property="og:description" content="判定交给规则引擎，模型只负责改写与 OCR —— 一份关于责任边界的精简 PRD。">
+<meta property="og:image" content="assets/og.jpg">
+<meta name="theme-color" content="#0a2231">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2325414A'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23DCEFEA' stroke-width='1.5'/></svg>">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="bg" aria-hidden="true"></div>
+
+<header class="topbar" id="topbar">
+  <div class="topbar-inner glass glass-nav">
+    <a class="brand" href="index.html">WANG YANPENG</a>
+    <nav aria-label="主要导航">
+      <a href="project-jd.html">← 返回案例</a>
+      <a href="index.html#projects">全部案例</a>
+    </nav>
+    <a class="btn btn-glass" href="mailto:2748916664@qq.com">联系我 <span class="arw">↗</span></a>
+  </div>
+</header>
+
+<main class="doc-wrap">
+  <article class="doc">
+
+    <header class="doc-head">
+      <p class="doc-kicker">PRODUCT REQUIREMENTS DOCUMENT · 精简版</p>
+      <h1>投递决策器</h1>
+      <p class="doc-sub">粘贴 JD 与简历，回答三件事：这个岗投不投、面试会在哪里被问穿、有多少条可核对的事实。判不了的部分，照实说“判不了”。</p>
+      <dl class="doc-meta">
+        <div><dt>版本</dt><dd>v0.1</dd></div>
+        <div><dt>时间</dt><dd>2026.11</dd></div>
+        <div><dt>作者</dt><dd>王雁鹏（产品设计 + 独立开发）</dd></div>
+        <div><dt>状态</dt><dd>已实现 · 238 项单测通过</dd></div>
+      </dl>
+    </header>
+
+    <section>
+      <h2>1. 问题</h2>
+      <p>首版主输出是「对齐度 37 分」。内测时发现：<strong>用户拿着这个数，既决定不了投不投，也不知道该补什么</strong>——分数看起来专业，但不指向任何行动。</p>
+      <p class="doc-quote">问题定义：不是“算得准不准”，而是“用户看完能不能立刻做一件事”。</p>
+      <p>引擎一行没改，只重做输出层：把“一个分数”换成“投递决策 / 面试追问 / 事实账本”三件能直接行动的产物。</p>
+    </section>
+
+    <section>
+      <h2>2. 责任边界</h2>
+      <p>这个产品的核心设计决定：<strong>凡是需要“确定”的判断，都不交给模型</strong>。</p>
+      <table class="doc-table">
+        <tr><th>硬性条件</th><td><strong>规则引擎（纯函数）</strong> —— 学历、届别、到岗天数、实习时长单独做二元校验，任一不符直接判「别投」。模型不参与。</td></tr>
+        <tr><th>证据覆盖</th><td><strong>规则引擎</strong> —— 同输入必同输出，可复算、可回归。</td></tr>
+        <tr><th>事实编号</th><td><strong>规则引擎 + 白名单</strong> —— 编号只能来自名单/下拉/原文三方对账，申报不存在的编号即判编造并拦截。</td></tr>
+        <tr><th>文本改写 / OCR</th><td><strong>模型</strong> —— 容错环节，输出不参与任何判定。</td></tr>
+        <tr><th>最终结论</th><td><strong>规则 + 用户确认</strong> —— 模型只提供素材，不给结论。</td></tr>
+      </table>
+      <p class="doc-note">代价是模型能力用不满；收益是断网也能出完整报告，且每条结论都能追到依据。</p>
+    </section>
+
+    <section>
+      <h2>3. 关键规则</h2>
+      <ul class="doc-check">
+        <li><strong>两件事拆开</strong>：「做过类似的事吗」和「够不够格」分开判，不混成一个分数。</li>
+        <li><strong>只差一两条不劝退</strong>：把「改一版再投」作为缺口的默认归宿；硬性要求一半以上零证据才判「别投」。</li>
+        <li><strong>「没写」≠「不满足」</strong>：抽不出的条件记「没写」，不脑补成不合格。</li>
+        <li><strong>防编造</strong>：事实账本每条编号可回溯到简历原文，找不到即为编造。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. 验收标准</h2>
+      <ul class="doc-check">
+        <li>238 项单测全过，四个 JD 的跑分钉成回归基线，改规则必跑。</li>
+        <li>任何结论都能点开看到依据（原文片段 / 命中的规则）。</li>
+        <li>判不了的情况必须输出「判不了 + 缺什么」，不允许给一个看起来精确的数字。</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5. 边界</h2>
+      <ul class="doc-check">
+        <li>不替用户编经历，不猜「没写」的条件，不给录用概率。</li>
+        <li>文字只留在本机，不上传、不留存。</li>
+        <li>本地运行版本，岗位与简历均为示例数据。</li>
+      </ul>
+    </section>
+
+    <footer class="doc-foot">
+      <a href="project-jd.html">← 回到案例页</a>
+      <span>脱敏版 · 结构与口径来自真实项目文档</span>
+    </footer>
+
+  </article>
+</main>
+
+<script>
+  const bar = document.getElementById('topbar');
+  addEventListener('scroll', () => bar.classList.toggle('is-solid', window.scrollY > 80), { passive: true });
+</script>
+</body>
+</html>
