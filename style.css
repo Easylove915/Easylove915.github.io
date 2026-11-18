@@ -756,3 +756,61 @@ section[id]{scroll-margin-top:96px}
   .eval-table th,.eval-table td{padding:9px 6px}
   .eval-table td.num-cell{font-size:12.5px}
 }
+
+/* ---------- 长文档（真实 PRD 渲染） ---------- */
+.doc--long{max-width:980px}
+.doc-body h2{
+  margin:40px 0 12px; padding-top:8px;
+  font-size:clamp(20px,2vw,27px);
+}
+.doc-body h3{margin:26px 0 8px; font-size:16px; font-weight:600; color:#25414a; letter-spacing:0}
+.doc-body p{margin:0 0 12px}
+.doc-body hr{}
+.doc code{
+  background:rgba(25,21,18,.07); padding:1px 5px; border-radius:4px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.9em; color:#3a2f26;
+}
+.doc-pre{
+  background:#201d19; color:#f4efe6; padding:14px 16px; border-radius:10px;
+  overflow-x:auto; font-size:12px; line-height:1.65; margin:12px 0 20px;
+}
+.doc-pre code{background:none; padding:0; color:inherit; font-size:12px}
+.doc-hr{border:0; border-top:1px solid rgba(25,21,18,.14); margin:36px 0}
+.doc-md-scroll{overflow-x:auto; margin:8px 0 20px}
+.doc-md-table{
+  width:100%; border-collapse:collapse; font-size:12.5px; margin:0;
+}
+.doc-md-table th,.doc-md-table td{
+  border:1px solid rgba(25,21,18,.13); padding:8px 10px; vertical-align:top; line-height:1.65;
+}
+.doc-md-table th{
+  background:rgba(37,65,74,.075); text-align:left; font-weight:600; font-size:11.5px; color:#3a332c;
+}
+.doc-md-table tbody tr:nth-child(even) td{background:rgba(37,65,74,.028)}
+.doc-md-table code{background:rgba(25,21,18,.07); padding:0 4px; border-radius:3px; font-size:.9em}
+
+/* 目录 */
+.doc-toc{
+  margin:30px 0 6px; padding:22px 24px;
+  border:1px solid rgba(25,21,18,.13); border-radius:14px; background:rgba(37,65,74,.045);
+}
+.doc-toc-title{
+  margin:0 0 14px; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:#8a7f72;
+}
+.doc-toc ol{list-style:none; margin:0; padding:0; columns:2; column-gap:34px; font-size:13px; line-height:1.95}
+.doc-toc li{break-inside:avoid}
+.doc-toc li.lvl2{font-weight:600; color:#191512; margin-top:8px}
+.doc-toc li.lvl3{padding-left:14px; color:#5f564b}
+.doc-toc a{color:inherit; text-decoration:none}
+.doc-toc a:hover{color:#25414a; text-decoration:underline; text-underline-offset:3px}
+
+@media (max-width:760px){
+  .doc-toc{padding:16px 16px}
+  .doc-toc ol{columns:1; font-size:12.5px}
+  .doc-md-table{min-width:600px}
+  .doc-md-table th,.doc-md-table td{padding:7px 8px; font-size:11.5px}
+  .doc-body h2{margin-top:32px}
+}
+
+.doc-h1{margin:8px 0 2px; font-family:var(--font-display); font-weight:400; font-size:clamp(28px,3.4vw,42px); line-height:1.15; letter-spacing:-.02em}
+.doc-md-table th:first-child{min-width:92px}

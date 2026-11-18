@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>eNSP 排障助手 · PRD（脱敏版）· 王雁鹏</title>
-<meta name="description" content="eNSP 排障助手的产品需求文档（脱敏版）：背景、目标与非目标、核心流程、风险分级规则、验收标准与评测口径。">
+<title>eNSP 排障助手 · PRD v2.0 · 王雁鹏</title>
+<meta name="description" content="eNSP 排障助手的完整 PRD v2.0：背景与目标、方案选型、17 条功能需求、状态机、指标口径、风险登记与评测台账。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="eNSP 排障助手 · PRD（脱敏版）">
-<meta property="og:description" content="一份写给执行者的 PRD：目标与非目标、核心流程、状态机、风险分级、验收标准与评测口径。">
+<meta property="og:title" content="eNSP 排障助手 · PRD v2.0">
+<meta property="og:description" content="eNSP 排障助手的完整 PRD v2.0：背景与目标、方案选型、17 条功能需求、状态机、指标口径、风险登记与评测台账。">
 <meta property="og:image" content="assets/og.jpg">
 <meta name="theme-color" content="#0a2231">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2325414A'/><circle cx='16' cy='16' r='6' fill='none' stroke='%23DCEFEA' stroke-width='1.5'/></svg>">
@@ -21,120 +21,407 @@
   <div class="topbar-inner glass glass-nav">
     <a class="brand" href="index.html">WANG YANPENG</a>
     <nav aria-label="主要导航">
-      <a href="project-ensp.html">← 返回案例</a>
       <a href="index.html#projects">全部案例</a>
+      <a href="#top">回到顶部</a>
     </nav>
     <a class="btn btn-glass" href="mailto:2748916664@qq.com">联系我 <span class="arw">↗</span></a>
   </div>
 </header>
 
-<main class="doc-wrap">
-  <article class="doc">
-
-    <header class="doc-head">
-      <p class="doc-kicker">PRODUCT REQUIREMENTS DOCUMENT · 脱敏版</p>
-      <h1>eNSP 排障助手</h1>
-      <p class="doc-sub">面向网络实验课学生的多模态排障助手 —— 从“现象”定位到“根因”，每条根因给一条可以直接粘进 CLI 的验证命令。</p>
-      <dl class="doc-meta">
-        <div><dt>版本</dt><dd>v0.2</dd></div>
-        <div><dt>时间</dt><dd>2026.10—11</dd></div>
-        <div><dt>作者</dt><dd>王雁鹏（产品设计 + 独立开发）</dd></div>
-        <div><dt>状态</dt><dd>已实现 · 已评测 · 本地 demo</dd></div>
-      </dl>
-    </header>
-
-    <section>
-      <h2>1. 背景与问题</h2>
-      <p>网络实验课的学生在 eNSP 里配不通时，缺的不是资料，而是“先试哪个、哪个有风险”。</p>
-      <p>我拆了两份主流的 eNSP 资料，<strong>约 90% 的篇幅在讲安装和汉化</strong>；真正卡住人的配置故障（Trunk 不通、OSPF 邻居起不来）几乎空白。而通用大模型给的答案是“步骤罗列”——不知道先试哪个，也不知道哪些操作有风险。</p>
-      <p class="doc-quote">问题定义：把“资料不够”改成“缺少按现象排序、带风险等级的验证路径”。</p>
-    </section>
-
-    <section>
-      <h2>2. 目标与非目标</h2>
-      <div class="doc-cols">
-        <div>
-          <h3>目标</h3>
-          <ul>
-            <li>贴一张报错截图、或写一句话现象，给出按概率排序的候选根因。</li>
-            <li>每条根因配一条<strong>可直接执行的验证命令</strong>与<strong>风险等级</strong>。</li>
-            <li>信息不足时先追问缺失信息，而不是硬给一个答案。</li>
-            <li>把“已排除 / 已试无效”变成结构化记录，逐段收敛。</li>
-          </ul>
-        </div>
-        <div>
-          <h3>非目标</h3>
-          <ul>
-            <li>不做“知识库问答”，不做资料汇总。</li>
-            <li>不自动修改用户配置，不替代动手。</li>
-            <li>不承诺“唯一正确答案”。</li>
-            <li>不替代实验课与老师。</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <h2>3. 用户与场景</h2>
-      <table class="doc-table">
-        <tr><th>用户</th><td>网络实验课学生 / 自学 eNSP 的初学者</td></tr>
-        <tr><th>场景</th><td>实验课或自学时交换机不通，手上只有一张报错截图，或一句“Trunk 都配了，VLAN 10 还是不通”</td></tr>
-        <tr><th>环境</th><td>本地演示版：Python 单文件服务 + 多模态模型（qwen3-vl-plus），不依赖云端账号</td></tr>
-      </table>
-    </section>
-
-    <section>
-      <h2>4. 核心流程</h2>
-      <ol class="doc-flow">
-        <li><strong>输入</strong> 报错截图 / CLI 回显 / 一句话现象。</li>
-        <li><strong>现象识别</strong> 标注场景（安装 / 配置 / 协议）、置信度、信息是否充足。</li>
-        <li><strong>候选根因</strong> 按概率从高到低排列，每条带风险等级与验证命令。</li>
-        <li><strong>用户反馈</strong> 「就是它」/「试过没用」/「排除」，链往下走一段。</li>
-        <li><strong>收敛</strong> 排除记录结构化回灌，直到定位或给出结论。</li>
-      </ol>
-      <p class="doc-note">关键设计：排除是“一段一段走”，不是“一次给全”。每次只让用户做一件事，做完再给下一段。</p>
-    </section>
-
-    <section>
-      <h2>5. 关键规则</h2>
-      <table class="doc-table">
-        <tr><th>风险分级</th><td>安全 / 需备份 / 高风险 —— 每条根因必须标注，竞品把「改 BIOS」与「删注册表」平级罗列是反例</td></tr>
-        <tr><th>信息不足</th><td>先问缺的那几句（哪个接口配了 Trunk、两台是否都建了 VLAN），不给结论</td></tr>
-        <tr><th>排除记录</th><td>写成结构化清单回灌模型，不依赖聊天历史；实测连排 4 条后仍能换出新方向</td></tr>
-        <tr><th>领域事实</th><td>如 eNSP 只认 VirtualBox 5.2.x —— 用知识卡注入 + 回归断言，不指望提示词消除幻觉</td></tr>
-      </table>
-    </section>
-
-    <section>
-      <h2>6. 验收标准</h2>
-      <ul class="doc-check">
-        <li>每条根因必须给出可粘贴执行的 CLI 验证命令，不接受“去检查一下配置”这类空话。</li>
-        <li>现象识别必须同时给出置信度与信息完整性判断。</li>
-        <li>连续排除 4 条后仍能给出新方向（作为回归用例保留）。</li>
-        <li>补 6 张知识卡后，「现象描述」类满分率从 0% 提升到 78%，整体 31% → 50%。</li>
-      </ul>
-    </section>
-
-    <section>
-      <h2>7. 评测口径</h2>
-      <p>30 条评测集 × 5 类（含「信息不足」「误导陷阱」）× 3 次重复 = <strong>90 次作答</strong>。判分故意换厂商，先用 2/1/0 已知答案校准，再以语义判断替代关键词匹配。</p>
-      <p class="doc-note">每类只有 6 条，样本小，结论只作为方向判断，不作为效果承诺。</p>
-    </section>
-
-    <section>
-      <h2>8. 边界与公开说明</h2>
-      <ul class="doc-check">
-        <li>当前是本地 demo v0.2，不是生产系统。</li>
-        <li>公开版不含真实设备、账号与报错截图，示例数据均为合成。</li>
-        <li>不提供自动修复，所有改动由用户确认后自行执行。</li>
-      </ul>
-    </section>
-
+<main class="doc-wrap" id="top">
+  <article class="doc doc--long">
+    <p class="doc-kicker">PRODUCT REQUIREMENTS DOCUMENT · v2.0 · 脱敏版</p>
+    <h1 class="doc-h1">PRD · eNSP 排障助手</h1>
+<nav class="doc-toc" aria-label="目录"><p class="doc-toc-title">目录</p><ol><li class="lvl2"><a href="#h1">一、文档信息</a></li><li class="lvl3"><a href="#h2">1.1 变更记录</a></li><li class="lvl3"><a href="#h3">1.2 评审记录</a></li><li class="lvl2"><a href="#h4">二、背景与目标</a></li><li class="lvl3"><a href="#h5">2.1 背景</a></li><li class="lvl3"><a href="#h6">2.2 问题定义</a></li><li class="lvl3"><a href="#h7">2.3 目标与实测对照</a></li><li class="lvl3"><a href="#h8">2.4 明确不做（Non-goals）</a></li><li class="lvl2"><a href="#h9">三、名词与术语</a></li><li class="lvl2"><a href="#h10">四、需求范围</a></li><li class="lvl3"><a href="#h11">4.1 本期包含</a></li><li class="lvl3"><a href="#h12">4.2 本期不包含</a></li><li class="lvl3"><a href="#h13">4.3 范围声明</a></li><li class="lvl2"><a href="#h14">五、方案对比与选型说明</a></li><li class="lvl3"><a href="#h15">5.1 三种推理路径（已用同一套 30 条评测集做过 A/B）</a></li><li class="lvl3"><a href="#h16">5.2 知识注入模式对比</a></li><li class="lvl3"><a href="#h17">5.3 输出层方案</a></li><li class="lvl3"><a href="#h18">5.4 演进路径</a></li><li class="lvl2"><a href="#h19">六、用户角色与使用场景</a></li><li class="lvl3"><a href="#h20">6.1 用户旅程</a></li><li class="lvl2"><a href="#h21">七、功能需求</a></li><li class="lvl3"><a href="#h22">FR-01 输入</a></li><li class="lvl3"><a href="#h23">FR-02 结构化输出契约</a></li><li class="lvl3"><a href="#h24">FR-03 候选根因：排序、上限、验证方法、风险</a></li><li class="lvl3"><a href="#h25">FR-04 信息不足时追问</a></li><li class="lvl3"><a href="#h26">FR-05 结构化反馈回灌</a></li><li class="lvl3"><a href="#h27">FR-06 收敛与结论锁定</a></li><li class="lvl3"><a href="#h28">FR-07 命令一键复制</a></li><li class="lvl3"><a href="#h29">FR-08 导出 Markdown 排查记录</a></li><li class="lvl3"><a href="#h30">FR-09 空态与示例问题卡</a></li><li class="lvl3"><a href="#h31">FR-10 排查进度台账</a></li><li class="lvl3"><a href="#h32">FR-11 知识卡片与注入模式</a></li><li class="lvl3"><a href="#h33">FR-12 服务端确定性收口</a></li><li class="lvl3"><a href="#h34">FR-13 JSON 容错与失败落盘</a></li><li class="lvl3"><a href="#h35">FR-14 错误呈现与恢复</a></li><li class="lvl3"><a href="#h36">FR-15 只读静态资源服务</a></li><li class="lvl3"><a href="#h37">FR-16 证据分级（卡片复核状态）</a></li><li class="lvl3"><a href="#h38">FR-17 服务健壮性（三个真实故障的修复）</a></li><li class="lvl2"><a href="#h39">八、非功能需求</a></li><li class="lvl2"><a href="#h40">九、业务流程与状态流转</a></li><li class="lvl3"><a href="#h41">9.1 会话状态机</a></li><li class="lvl3"><a href="#h42">9.2 请求链路（含失败分支）</a></li><li class="lvl2"><a href="#h43">十、数据与埋点需求</a></li><li class="lvl3"><a href="#h44">10.1 本期数据能力</a></li><li class="lvl3"><a href="#h45">10.2 指标口径（必须写清，否则数字会被误读）</a></li><li class="lvl3"><a href="#h46">10.3 v2 埋点建议（待实施）</a></li><li class="lvl2"><a href="#h47">十一、权限与安全要求</a></li><li class="lvl2"><a href="#h48">十二、异常处理清单</a></li><li class="lvl2"><a href="#h49">十三、上线计划、依赖与上线后验证</a></li><li class="lvl3"><a href="#h50">13.1 依赖就绪度</a></li><li class="lvl3"><a href="#h51">13.2 演示路径</a></li><li class="lvl3"><a href="#h52">13.3 上线后验证（= 每次改动的回归）</a></li><li class="lvl3"><a href="#h53">13.4 后续版本规划</a></li><li class="lvl2"><a href="#h54">十四、风险与遗留问题</a></li><li class="lvl3"><a href="#h55">14.1 风险登记册（概率 × 影响，各 1–5）</a></li><li class="lvl3"><a href="#h56">14.2 一处必须裁决的口径冲突（本版新增）</a></li><li class="lvl3"><a href="#h57">14.3 遗留问题</a></li><li class="lvl2"><a href="#h58">十五、附录</a></li><li class="lvl3"><a href="#h59">15.1 评测运行台账（全部可回溯）</a></li><li class="lvl3"><a href="#h60">15.2 需求追踪矩阵（RTM）</a></li><li class="lvl3"><a href="#h61">15.3 AI 功能专项（六模块）</a></li><li class="lvl3"><a href="#h62">15.4 文档与数据不一致清单（本版核对出来的）</a></li><li class="lvl3"><a href="#h63">15.5 关键数值索引</a></li></ol></nav>
+    <div class="doc-body">
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>项</th><th>内容</th></tr></thead><tbody><tr><td>产品名</td><td>eNSP 排障助手（eNSP Troubleshooting Assistant）</td></tr><tr><td>文档版本</td><td><strong>v2.0</strong>（替代 v1.0；对应产品 demo v0.2 已实现版本）</td></tr><tr><td>产品状态</td><td>本地 Demo 已跑通 · 已评测 · 未上线</td></tr><tr><td>作者</td><td>王雁鹏（产品设计 + 独立开发）</td></tr><tr><td>日期</td><td>2026-11-18</td></tr><tr><td>依据</td><td><code>app.py</code>、<code>knowledge_cards.py</code>、<code>web/index.html</code>、<code>knowledge_cards.py</code>、<code>scripts/*.py</code>、<code>data/runs/*/summary.md</code>、<code>docs/竞品拆解.md</code>、<code>DESIGN.md</code></td></tr></tbody></table></div>
+<blockquote class="doc-quote"><strong>本版与 v1.0 的差别</strong>：全部效果数字改为按 <code>data/runs/&lt;时间戳&gt;/summary.md</code> 逐份核对后的实测值；补上 v1.0 未覆盖的六类实现细节（JSON 容错、HEAD 处理、端口去重、卡片复核状态、Agent 调用失败率、评分口径冲突）。发现两处「文档写的」与「run 记录里写的」不一致，已在 15.4 单列，不做粉饰。</blockquote>
+<hr class="doc-hr">
+<h2 id="h1">一、文档信息</h2>
+<h3 id="h2">1.1 变更记录</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>版本</th><th>日期</th><th>变更</th></tr></thead><tbody><tr><td>v1.0</td><td>2026-11-18</td><td>首版：按 README 叙述整理需求</td></tr><tr><td><strong>v2.0</strong></td><td>2026-11-18</td><td>数字全部回溯到 run 记录；新增 FR-16（证据分级）、FR-17（服务健壮性）；新增 14.2「评分口径与产品要求冲突」；新增 15.4「文档与数据不一致清单」；明确 Agent 方案的真实成本（12 次调用失败）</td></tr></tbody></table></div>
+<h3 id="h3">1.2 评审记录</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>轮次</th><th>结论</th><th>遗留项</th></tr></thead><tbody><tr><td>—</td><td>未评审（个人项目）</td><td>用户规模、真实截图评测、评分口径裁决三项待定</td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h4">二、背景与目标</h2>
+<h3 id="h5">2.1 背景</h3>
+<p>学生卡在 eNSP 里时，真实动作是<strong>截图 → 发群里问人</strong>，不是去搜文档。现有资料与这个动作对不上，三条原因均有实测依据（<code>docs/竞品拆解.md</code>，2026-11-08，样本为两个公开 eNSP 内容站）：</p>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>现状问题</th><th>证据</th></tr></thead><tbody><tr><td><strong>覆盖失衡</strong></td><td>约 90% 篇幅讲安装/启动；配置类故障（Trunk 不通、OSPF 邻居起不来）只有一张 7 行表格</td></tr><tr><td><strong>不排序</strong></td><td>样本 B「40 错误」一节给 9 种关闭 Hyper-V 的方法 + 6 个排查步骤，全部并列</td></tr><tr><td><strong>不分风险</strong></td><td>改 BIOS、关 Windows 功能、改注册表、删注册表项、降级系统被平级罗列</td></tr></tbody></table></div>
+<p>通用大模型的输出同样是「步骤罗列」——不知道先试哪个、哪个有风险。</p>
+<h3 id="h6">2.2 问题定义</h3>
+<blockquote class="doc-quote"><strong>问题不是「资料不够」，而是缺少一条按现象排序、按风险分级、信息不足时会反问的验证路径。</strong></blockquote>
+<p>这条改写决定了后面所有取舍：不做「知识库问答」，做「一次排障会话」。</p>
+<h3 id="h7">2.3 目标与实测对照</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>P</th><th>目标</th><th>口径</th><th>实测</th><th>达成</th></tr></thead><tbody><tr><td>P0</td><td>输入现象 → 输出<strong>按概率排序</strong>的候选根因</td><td>满分命中率（0/1/2 语义判分）</td><td>45/90 = <strong>50%</strong></td><td>✅</td></tr><tr><td>P0</td><td>每条根因给<strong>可立即执行</strong>的验证方法</td><td>结构断言 + <code>test_e2e.py</code></td><td>3/3 通过</td><td>✅</td></tr><tr><td>P1</td><td>信息不足时<strong>主动追问</strong></td><td>「信息不足」类满分率</td><td>9/18 = 50%</td><td>⚠️ 见 14.2（口径冲突）</td></tr><tr><td>P1</td><td>排除记录结构化回灌，连续排除后仍换方向</td><td><code>test_session.py</code></td><td>连排 4 条后给第 5、6 个方向</td><td>✅</td></tr><tr><td>P2</td><td>每条根因标注<strong>风险等级</strong></td><td>字段必填 + 枚举校验</td><td><code>postprocess()</code> 保证</td><td>✅</td></tr><tr><td>P2</td><td>稳定性：同一题三次结果一致</td><td>得分完全一致题数</td><td>15/30 = <strong>50%</strong></td><td>❌ 低于加卡片前的 19/30</td></tr></tbody></table></div>
+<blockquote class="doc-quote">P2 的稳定性是<strong>未达成</strong>的。v1.0 只写了「稳定满分从 5 升到 9」，没写「一致题数从 19 掉到 15」——后者才是用户能感知的（同一句话问两遍给不同答案）。详见 14.1 RK-04。</blockquote>
+<h3 id="h8">2.4 明确不做（Non-goals）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>不做</th><th>理由</th></tr></thead><tbody><tr><td>用户登录 / 历史记录</td><td>要存储与部署；会让 Demo 从「能跑」变成「要部署」</td></tr><tr><td>第二个知识问答页面</td><td>没有独立场景，会稀释定位</td></tr><tr><td>自动修改配置 / 自动下发命令</td><td>定位是「让人能确认」，不是「替人动手」</td></tr><tr><td>语音输入、多语言</td><td>与核心问题无关</td></tr><tr><td>自动解析拓扑生成配置</td><td>两天做不完，且会把定位从「排障」拉向「教学」</td></tr><tr><td>社区 / 分享 / 积分</td><td>冷启动问题，连 20 个用户都还没有</td></tr><tr><td><strong>Agent 化 / 工具调用</strong></td><td>已实现并 A/B 验证后<strong>移除</strong>，见 5.1</td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h9">三、名词与术语</h2>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>术语</th><th>定义</th><th>代码/字段</th></tr></thead><tbody><tr><td>现象</td><td>从截图与文字识别出的一句话故障概括</td><td><code>现象</code></td></tr><tr><td>场景</td><td>六类枚举：安装 / 启动设备 / 配置 / 抓包 / 保存拓扑 / 其他</td><td><code>场景</code></td></tr><tr><td>候选根因</td><td>按概率降序的原因；<strong>最多 3 条，信息不足时最多 2 条</strong></td><td><code>可能根因[]</code></td></tr><tr><td>验证方法</td><td>可立刻执行的一步；命令以反引号包裹 → 前端渲染为可复制芯片</td><td><code>可能根因[].验证方法</code></td></tr><tr><td>风险</td><td>三档：安全 / 需备份 / 高风险</td><td><code>可能根因[].风险</code></td></tr><tr><td>信息是否充分</td><td>布尔；false 时置信度必须为「低」，且仍须给 1~2 条待确认假设</td><td><code>信息是否充分</code></td></tr><tr><td>排除 / 已试无效</td><td>用户点按钮确认的结构化状态，走后端 <code>build_state_block()</code> 拼成<strong>独立 system message</strong></td><td><code>state.excluded</code> / <code>state.tried</code></td></tr><tr><td>锁定</td><td>结论成立；由用户点「就是这个」触发</td><td><code>是否锁定</code> / <code>锁定结论</code></td></tr><tr><td>一轮（hop）</td><td>前端排查链上的一段；<code>00</code> 是现象段，<code>01…</code> 是根因段，末段可能是结论段</td><td><code>web/index.html</code> <code>render()</code></td></tr><tr><td>满分命中率</td><td>单次作答得 2 分 ÷ 有效作答数</td><td><code>scripts/run_eval.py</code></td></tr><tr><td>一致题数</td><td>同一题 3 次重复得分完全相同的题数</td><td><code>summary.md</code> 稳定性段</td></tr><tr><td>复核状态</td><td>知识卡片的证据等级：<code>已复现</code> / <code>待复现</code></td><td><code>knowledge_cards.py</code> <code>复核</code></td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h10">四、需求范围</h2>
+<h3 id="h11">4.1 本期包含</h3>
+<ol>
+<li>单页站点：首屏 → 能力三栏 → 怎么工作（含拓扑示意）→ 工具区（立案 + 排查链）→ 页脚。</li>
+<li>输入：拖拽 / 多选上传、<strong>Ctrl+V 直接粘贴截图</strong>、文字描述、轮次计数。</li>
+<li>结构化输出：固定 JSON → 排查链渲染（编号轨 + 节点状态 + 状态徽标）。</li>
+<li>三按钮结构化反馈 → 状态回灌 → 逐段收敛 → 结论段。</li>
+<li>命令一键复制（鼠标与键盘 Enter/Space 同路径）。</li>
+<li>导出 Markdown 排查记录（逐轮、含排除/已试/已确认）。</li>
+<li>6 张知识卡片 × 三种注入模式（<code>all</code> / <code>match</code> / <code>off</code>）。</li>
+<li>服务端确定性收口：<code>postprocess()</code> + JSON 容错解析 + 失败原文落盘。</li>
+<li>评测与回归四件套：<code>test_e2e.py</code>、<code>test_session.py</code>、<code>test_adversarial.py</code>、<code>run_eval.py</code>。</li>
+</ol>
+<h3 id="h12">4.2 本期不包含</h3>
+<ul>
+<li>账号体系、数据持久化、公网部署、埋点上报。</li>
+<li>RAG / 向量检索（v1.0 候选）。</li>
+<li>真实用户日志与真实报错截图评测集（<strong>当前用文字描述代替截图</strong>，所有截图类分数偏乐观）。</li>
+</ul>
+<h3 id="h13">4.3 范围声明</h3>
+<p>交付物是<strong>可演示、可评测的本地工具</strong>，不是生产系统。所有效果结论限定在 30 条人工构造评测集 + 6 条泛化变体上。</p>
+<hr class="doc-hr">
+<h2 id="h14">五、方案对比与选型说明</h2>
+<h3 id="h15">5.1 三种推理路径（已用同一套 30 条评测集做过 A/B）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>方案</th><th>做法</th><th>实测满分率</th><th>调用成本</th><th>关键副作用</th><th>结论</th></tr></thead><tbody><tr><td><strong>A. 单次前向 + 全量注入卡片</strong>（采用）</td><td>一轮调用，6 张卡片全塞 system message</td><td><strong>45/90 = 50%</strong>（run <code>20261109-103703</code>）</td><td>1×</td><td>—</td><td>采用</td></tr><tr><td>B. Agent + 工具按需检索（ReAct）</td><td>三工具：知识检索 / 拓扑解析 / 版本矩阵，自主循环</td><td>35/77 = <strong>45%</strong>（run <code>20261111-135322</code>）&lt;br&gt;单次跑 12/30 = 40%（run <code>20261111-134835</code>）</td><td><strong>1.77 步 / 次</strong>，工具调用 0.77 次/次</td><td><strong>12 次调用失败 + 1 条需人工</strong>；信息不足类从 50% 掉到 29%</td><td>已移除</td></tr><tr><td>C. 纯提示词（无卡片）</td><td>只靠预训练知识 + 提示词约束</td><td>28/90 = 31%（run <code>20261109-100456</code>）</td><td>1×</td><td>现象描述类 0/18</td><td>基线，弃用</td></tr></tbody></table></div>
+<p><strong>为什么不选 B</strong>（三条理由，都有数据）：</p>
+<ol>
+<li><strong>没有提升</strong>：45% vs 50%，落在置信区间内。</li>
+<li><strong>规模不匹配</strong>：6 张卡片、3 个工具、单轮场景，全量注入远未撑爆上下文，Agent 的可扩展性优势发挥不出来。</li>
+<li><strong>代价是真实的</strong>：Agent 那一轮 3 次重复里 <strong>12 次调用失败、1 条需人工判分</strong>（<code>20261111-135322</code> 报告首行），跑批成本和多步调试成本都上去了；更严重的是模型「更愿意去查、更不愿意追问」，直接损害 P1 目标。</li>
+</ol>
+<p><strong>沉淀为选型规则</strong>：决策空间大到代码写不完时才上 Agent；流程固定、工具 ≤3 个，固定流水线更划算。重新启用 Agent 的前置条件是卡片扩到 30~50 张——那时全量注入会崩，按需检索才有意义。</p>
+<h3 id="h16">5.2 知识注入模式对比</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>模式</th><th>行为</th><th>实测（现象描述 6 条专项）</th><th>决策</th></tr></thead><tbody><tr><td><code>all</code>（默认）</td><td>6 张卡片全量注入</td><td><strong>16/18 = 89%</strong></td><td>卡片 &lt; 20 张时用这个</td></tr><tr><td><code>match</code></td><td>关键词命中打分，取 <strong>score &gt; 0 的前 3 张</strong>；全部未命中则返回空</td><td>14/18 = 78%</td><td>卡片 &gt; 20 张再切</td></tr><tr><td><code>off</code></td><td>不注入</td><td>0/18 = 0%</td><td>仅作对照组</td></tr></tbody></table></div>
+<p><code>match</code> 更差的根因很具体：<strong>关键词没命中就等于没给</strong>（<code>render_knowledge()</code> 在 <code>picked</code> 为空时返回空串）。加卡片后全量 30 条：31% → 50%。</p>
+<h3 id="h17">5.3 输出层方案</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>方案</th><th>问题</th><th>决策</th></tr></thead><tbody><tr><td>自由文本</td><td>无法评测、无法回归、无法结构断言</td><td>否</td></tr><tr><td>固定 JSON</td><td>模型不守格式时整条链路挂</td><td>采用 + 三层容错</td></tr><tr><td><strong>固定 JSON + 服务端收口 + 解析自修复</strong></td><td>多几十行代码，换来「提示词管不住的东西由代码管住」</td><td><strong>采用</strong></td></tr></tbody></table></div>
+<h3 id="h18">5.4 演进路径</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>阶段</th><th>触发条件</th></tr></thead><tbody><tr><td>本期：6 张卡片全量注入</td><td>已实现</td></tr><tr><td>下一步：卡片扩到 20~50 张，切 <code>match</code></td><td>卡片数 &gt; 20</td></tr><tr><td>再下一步：接 RAG + 强制给出处</td><td>长尾问题仍编造，且「可溯源」成为卖点</td></tr><tr><td>备选：卡片「必做动作」改成 ①②③ 清单</td><td>见 14.1 RK-03（漏最后一个动作）</td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h19">六、用户角色与使用场景</h2>
+<blockquote class="doc-quote">角色基于竞品拆解与自身体验构建，<strong>未做用户调研</strong>，标注为待验证假设。</blockquote>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>角色</th><th>特征</th><th>核心目标</th><th>典型场景</th><th>能力水平</th></tr></thead><tbody><tr><td><strong>主角色：网络实验课学生</strong></td><td>大二/大三，正上「网络设备配置」类课程</td><td>让实验继续做下去</td><td>实验课上交换机不通，只有一张报错截图</td><td>新手：能照抄命令，不会读 <code>display</code> 输出</td></tr><tr><td>次角色：自学 eNSP 的初学者</td><td>备考 HCIA / 自己做实验</td><td>验证自己配置错在哪</td><td>Trunk 配了 VLAN 10 不通；OSPF 邻居停在 ExStart</td><td>新手~熟练</td></tr></tbody></table></div>
+<h3 id="h20">6.1 用户旅程</h3>
+<pre class="doc-pre"><code>感知   实验做不下去
+  ↓
+进入   「开始排查」→ 滚到工具区（避开吸顶导航）
+  ↓
+操作   粘贴截图 / 拖文件 / 写一句话 → 开始排查
+  ↓
+判读   排查链：00 现象段（场景/置信度/信息是否充分）+ 01…根因段（概率/风险/验证命令）
+  ↓
+反馈   段上三按钮：就是这个 / 试过没用 / 排除 → 链自动往下走一段
+  ↓
+收敛   进度台账：已排除 N · 试过没用 M · 还没走 K + 进度条
+  ↓
+完成   末段出现结论（根因 / 处理 / 依据）→ 复制命令 / 导出 Markdown</code></pre>
+<p><strong>关键洞察</strong>：最后一步「导出写实验报告」是学生最真实的使用动机，比「答案好看」更驱动留存。这决定了 FR-08 必须做，且导出必须是<strong>逐轮记录</strong>而不是只导结论。</p>
+<hr class="doc-hr">
+<h2 id="h21">七、功能需求</h2>
+<blockquote class="doc-quote">字段名与 <code>app.py</code> 的 <code>SYSTEM_PROMPT</code>、<code>knowledge_cards.py</code> 一致，可直接对照代码。</blockquote>
+<h3 id="h22">FR-01 输入</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li>支持点击选择 / 拖拽 / <strong>多选</strong>上传图片（<code>&lt;input type="file" multiple accept="image/*"&gt;</code>）。</li>
+<li>支持 <strong>Ctrl+V 直接粘贴截图</strong>（监听 <code>document</code> 的 <code>paste</code>，只取 <code>image/*</code> 项）。</li>
+<li>支持纯文字描述；图片与文字可同时提交。</li>
+<li>有图片时优先读图（提示词硬性规则 1：截图里的报错码、CLI 回显优先于文字描述）。</li>
+<li>空输入点提交 → Toast 提示「先补一句描述，或上传一张截图」，不发请求。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 剪贴板里有一张截图，When 在页面按 Ctrl+V，Then 缩略区出现该图且可直接提交。</li>
+<li>Given 同时选了 2 张图和一段文字，When 提交，Then 请求体含 1 个 <code>text</code> + 2 个 <code>image_url</code> 内容块。</li>
+<li>Given 输入全空，When 点开始排查，Then 只弹 Toast，无网络请求。</li>
+</ul>
+<h3 id="h23">FR-02 结构化输出契约</h3>
+<p><strong>规则</strong>：模型只输出一个 JSON 对象，顶层 10 个字段：</p>
+<p><code>现象 / 场景 / 置信度 / 信息是否充分 / 还需要追问 / 可能根因[] / 下一步 / 依据 / 是否锁定 / 锁定结论</code></p>
+<p>枚举约束：<code>场景</code> 6 值；<code>置信度</code> 与 <code>概率</code> 为 高/中/低；<code>风险</code> 为 安全/需备份/高风险。字符串值内部禁止半角双引号（会破坏 JSON），强调用 <code>「」</code> 或反引号。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 任意有效输入，When 返回，Then <code>test_e2e.py</code> 的 <code>REQUIRED</code> 6 字段与 <code>CAUSE_FIELDS</code> 4 字段齐全、枚举合法（3/3 通过）。</li>
+<li>Given 模型在值里用了半角双引号，When 解析，Then 由容错层修复或降级为解析失败并落盘，不抛未捕获异常。</li>
+</ul>
+<h3 id="h24">FR-03 候选根因：排序、上限、验证方法、风险</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li>至少 1 条、最多 3 条，<strong>按概率降序</strong>；不得罗列所有可能性。</li>
+<li>每条含 <code>原因 / 概率 / 验证方法 / 风险</code>。</li>
+<li><code>验证方法</code> 必须是「用户可立刻执行的一步」，命令用反引号包裹。</li>
+</ol>
+<ul>
+<li>反例：「VirtualBox 版本不兼容」</li>
+<li>正例：「在 VirtualBox 菜单 帮助→关于 里看版本号是否为 5.2.44」</li>
+</ul>
+<ol>
+<li>已知无解场景（Win11 24H2 与 eNSP 结构性冲突）必须直说「大概率无法解决」并给替代方案，不为凑答案编偏方。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 报错 40 + 24H2，When 返回，Then 根因 ≤3 条、每条带 <code>风险</code>、且<strong>不含</strong>「升级 VirtualBox」或 <code>6.1.38</code>（回归断言 A-04）。</li>
+<li>Given 任一 <code>验证方法</code>，When 人工检查，Then 不含仅由「检查/确认/排查」构成的空句子。</li>
+</ul>
+<h3 id="h25">FR-04 信息不足时追问</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li><code>信息是否充分=false</code> → 追问 ≤3 条，一次只问最关键的。</li>
+<li><strong>仍须给 1~2 条待确认假设</strong>（提示词硬性规则 10），不得留空数组。</li>
+<li>此时整体 <code>置信度</code> 标「低」，但单条根因概率照真实判断给。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 只给一句现象，When 返回，Then <code>信息是否充分=false</code>、追问 ≤3、根因 1~2 条非空。</li>
+<li>已知风险：当追问 ≥2 条时，评测判分规则会因「一边追问一边下结论」给 1 分而非 2 分——<strong>这是产品要求与评分口径的冲突</strong>，见 14.2。</li>
+</ul>
+<h3 id="h26">FR-05 结构化反馈回灌</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li>每条未处理根因下三个按钮：<code>就是这个</code> / <code>试过没用</code> / <code>排除</code>。</li>
+<li>点击后<strong>两件事同时发生</strong>：</li>
+</ol>
+<ul>
+<li>前端把该根因文本推入 <code>S.excluded</code> / <code>S.tried</code> / <code>S.confirmed</code>，并随请求发送 <code>state</code>；</li>
+<li>同时追加一条用户消息（<code>【反馈】已排除：xxx。请在此基础上继续收窄。</code>），保持聊天记录可读。</li>
+</ul>
+<ol>
+<li>后端 <code>build_state_block()</code> 把状态拼成<strong>独立 system message</strong>：</li>
+</ol>
+<p>   ``<code>    # 当前排查状态（用户已通过按钮确认）    ## 已排除（确定不是原因，不要再建议，也不要换个说法重复）    ## 已尝试但无效（不要重复建议同一个操作）    </code>``</p>
+<ol>
+<li>已处理过的段不再渲染按钮（<code>done</code> 态）。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 第 1 轮 2 条根因，When 两条都点「排除」再提问，Then 第 2 轮给出 2 条全新方向、与已排除项零重合。</li>
+<li>Given 连续排除 4 条，When 第 3 轮，Then 给出第 5、6 个方向且不重复（<code>test_session.py</code>）。</li>
+<li>Given 某段已标「已排除」，When 重新渲染，Then 该段无操作按钮且有「已排除」徽标。</li>
+</ul>
+<h3 id="h27">FR-06 收敛与结论锁定</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li><strong>结论不由模型自评触发</strong>：实测模型在多轮中从不主动把 <code>是否锁定</code> 置 true（没有把握时不宣布结论，这本身是诚实行为）；若等模型自觉，结论段永远不出现，等于死功能。</li>
+<li>因此收敛动作变成<strong>用户的一次明确操作</strong>：点「就是这个」→ 前端标记 <code>S.confirmed</code> 并发送「【反馈】已确认就是这个原因：X。请给出最终结论和解决操作。」→ 模型置 <code>是否锁定=true</code> 并填 <code>锁定结论{根因, 操作, 依据}</code>。</li>
+<li><code>锁定结论</code> 仅在 <code>是否锁定=true</code> 时存在（<code>postprocess()</code> 强制：非 dict 一律置 null）。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 用户在某根因点「就是这个」，When 返回，Then <code>是否锁定=true</code>、<code>锁定结论</code> 三字段齐全、置信度「高」、信息充分为 true（<code>test_session.py</code> 第 4 轮）。</li>
+<li>Given <code>是否锁定=false</code>，When 检查，Then <code>锁定结论 === null</code>。</li>
+</ul>
+<h3 id="h28">FR-07 命令一键复制</h3>
+<p><strong>规则</strong>：<code>验证方法</code> 中的反引号片段渲染为 <code>&lt;code class="cp" role="button" tabindex="0" aria-label="复制命令"&gt;</code>；鼠标点击与键盘 Enter/Space 走同一复制路径；复制成功 Toast + 芯片短暂高亮；剪贴板不可用时降级为选中文本。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 一条含 <code>display vlan</code> 的验证方法，When 点击芯片，Then 剪贴板为 <code>display vlan</code> 且出现「已复制」。</li>
+<li>Given 焦点在芯片上，When 按 Enter，Then 与点击行为完全一致。</li>
+</ul>
+<h3 id="h29">FR-08 导出 Markdown 排查记录</h3>
+<p><strong>规则</strong>：导出内容为<strong>逐轮</strong>记录，结构固定：</p>
+<pre class="doc-pre"><code># eNSP 排障记录
+- 生成时间 / 排查轮次 / 已排除 / 已试无效 / 已确认根因
+---
+## 第 N 轮 · &lt;用户输入摘要&gt;
+**现象** / **场景** ｜ **置信度**
+**结论**（若锁定）/ **操作**
+1. [概率/风险] 原因
+   - 验证：…
+**需要补充** / **建议顺序** / **依据**</code></pre>
+<p>无记录时点导出 → Toast「还没有排查记录」，不生成空文件。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 已锁定结论的会话，When 导出，Then 文件名 <code>eNSP排障记录-YYYY-MM-DD.md</code>，内容含全部轮次与结论三要素。</li>
+<li>Given 尚未排查，When 点导出，Then 不下载文件、只提示。</li>
+</ul>
+<h3 id="h30">FR-09 空态与示例问题卡</h3>
+<p><strong>规则</strong>：空态展示 3 张入口卡（问题在上，编号 + 分类在下），点击即填入并直接发起请求；空态另有一份骨架屏占位（<code>loadingHTML()</code>）在请求期间使用。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 首屏进入工具区，When 未输入，Then 见 3 张示例卡；点击任一 → 触发一次真实请求。</li>
+<li>Given 请求进行中，When 观察，Then 显示骨架链 + 「排查中」文案 + <code>aria-live</code> 播报。</li>
+</ul>
+<h3 id="h31">FR-10 排查进度台账</h3>
+<p><strong>规则</strong>：显示 <code>已排除 N · 试过没用 M · 还没走 K</code> 与进度条，宽度 = <code>(total - pending) / total</code>；<code>pending</code> 排除已排除、已试、已确认三类。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 已排除 2、试过 1、本轮 5 段，When 渲染，Then 台账为 2/1/2，进度条 60%。</li>
+</ul>
+<h3 id="h32">FR-11 知识卡片与注入模式</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li>6 张卡片，字段固定：<code>id / 现象 / 关键词[] / 根因[] / 验证[] / 解决[] / 风险 / 注意 / 复核</code>。</li>
+<li>三种模式（<code>KNOWLEDGE_MODE</code>）：<code>all</code>（默认，全量）/ <code>match</code>（关键词打分取前 3，<strong>无命中则空</strong>）/ <code>off</code>（空串）。</li>
+<li>注入文案声明卡片优先级（与常识冲突时以卡片为准），并声明「标注待复现的条目尚未逐一亲手验证，用户反馈无效时必须换方向、不要坚持」。</li>
+<li>卡片集合的上限规则：卡片数 &lt; 20 用 <code>all</code>；&gt; 20 切 <code>match</code>。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given <code>all</code>，When 提问「刷 ####」，Then system message 含该卡片全文。</li>
+<li>Given <code>match</code>，When 提问「今天天气不错」，Then 注入为空串（不硬塞卡片）。</li>
+<li>Given 卡片 <code>复核</code> 为「待复现」，When 注入，Then 文本中出现待复现声明段。</li>
+</ul>
+<h3 id="h33">FR-12 服务端确定性收口</h3>
+<p><strong>规则</strong>（<code>postprocess()</code>，不依赖模型自觉）：</p>
+<ol>
+<li><code>信息是否充分=false</code> → 根因裁到 2 条；否则裁到 3 条。</li>
+<li><code>还需要追问</code> 裁到 ≤3 条。</li>
+<li>根因非 list → 置空；元素非 dict → 剔除。</li>
+<li><code>是否锁定</code> 强制 bool；<code>锁定结论</code> 非 dict → null。</li>
+</ol>
+<p><strong>理由</strong>（实测）：提示词写「信息不足最多 2 条」，模型照样给 3 条，反复调提示词无效。能确定性校验的东西不要指望模型自觉。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 信息不足却返回 3 条根因，When 过 <code>postprocess()</code>，Then 只剩 2 条。</li>
+<li>Given <code>可能根因</code> 是字符串，When 过 <code>postprocess()</code>，Then 变 <code>[]</code> 且接口 200。</li>
+</ul>
+<h3 id="h34">FR-13 JSON 容错与失败落盘</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li>先去 markdown 围栏（<code> </code>`<code> </code>），再尝试整段；失败则截取首个 <code>{</code> 到末个 <code>}</code> 重试。</li>
+<li>仍失败则做自修复后重试：非法转义（<code>C:\Program</code> → <code>C:\\Program</code>）、裸控制字符转义、去掉 <code>}</code>/<code>]</code> 前的多余逗号。</li>
+<li>全部失败：<code>_dump_failed()</code> 把原文写到 <code>data/failed/raw-&lt;时间戳&gt;.txt</code>，返回诊断（错误信息 + 位置 + 上下文 50 字符）。</li>
+<li><code>PARSE_RETRY=true</code> 时带诊断再请求一次，<strong>只重试一次</strong>，避免失败时双倍花费。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 模型输出 ``<code>json 包裹，When 解析，Then 成功且 </code>parse_error=""`。</li>
+<li>Given 输出含 <code>C:\Program Files</code> 未转义，When 解析，Then 自修复成功并在 stderr 记录修复项。</li>
+<li>Given 两次解析均失败，When 结束，Then <code>data/failed/</code> 下出现原文文件，接口返回 <code>parsed: null</code> + <code>parse_error</code>。</li>
+</ul>
+<h3 id="h35">FR-14 错误呈现与恢复</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li>非 JSON 响应 → 提示「服务返回了非 JSON 内容（HTTP x）。多半是后端没起来、中途重启，或请求被页面刷新打断。」</li>
+<li><code>ok=false</code> → 展示后端 <code>error</code> 文本。</li>
+<li>解析失败 → 链上出现 <code>--</code> 错误段 + 解析失败原因 + 原始输出，并保留追问输入框（可继续）。</li>
+<li>「重新开始」清空图片、消息、排除/已试/确认状态、轮次、进度与结果，回到空态。</li>
+</ol>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 后端未启动，When 提交，Then 出现上述文案而非白屏或 <code>undefined</code>。</li>
+<li>Given 点「重新开始」，When 再次提交，Then 轮次从「第 1 轮」重新计，历史不参与上下文。</li>
+</ul>
+<h3 id="h36">FR-15 只读静态资源服务</h3>
+<p><strong>规则</strong>：<code>GET/HEAD /assets/&lt;name&gt;</code> 只允许 <code>static/</code> 下单层文件名，扩展名白名单（png/jpg/jpeg/webp/svg），拒绝含 <code>/</code>、<code>\</code>、<code>..</code>。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 请求 <code>/assets/../../../app.py</code>，When 处理，Then 404，不读出源码。</li>
+</ul>
+<h3 id="h37">FR-16 证据分级（卡片复核状态）</h3>
+<p><strong>规则</strong></p>
+<ol>
+<li>每张卡片必须标 <code>复核</code>：<code>已复现</code>（本人跑过）/ <code>待复现</code>（来自公开资料整理）。</li>
+<li>注入时统一声明「待复现条目尚未逐一亲手验证，用户反馈无效时要接受并换方向」。</li>
+<li>未复现条目不得在对外文案中表述为「已验证」「实测有效」。</li>
+</ol>
+<p><strong>理由</strong>：竞品拆解里最大的可信度缺口就是「可解决 90% 以上」这类无依据断言。本产品用<strong>可测的评测数字 + 明确的证据等级</strong>替代它。</p>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given 任一张 <code>待复现</code> 卡片，When 导出排查记录，Then 记录中该条根因不出现「已验证」字样。</li>
+<li>Given 新增卡片，When 提交，Then <code>复核</code> 字段必填（缺失即视为不合格）。</li>
+</ul>
+<h3 id="h38">FR-17 服务健壮性（三个真实故障的修复）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>编号</th><th>故障现象</th><th>根因</th><th>规则</th></tr></thead><tbody><tr><td>F-17a</td><td>「页面一直在刷新，窗口不断弹出新标签」</td><td><code>BaseHTTPRequestHandler</code> 默认无 <code>do_HEAD</code> → 返回 501，探活方（预览面板/健康检查/扩展）判定服务异常并反复重试</td><td>实现 <code>do_HEAD</code>，与 <code>GET</code> 同语义（只省 body）；<code>do_OPTIONS</code> 回 204</td></tr><tr><td>F-17b</td><td>同端口重复启动 → 端口占用崩溃 + 每次弹新标签</td><td>无幂等启动检查</td><td>启动前探 <code>/api/config</code> 并校验返回含 <code>{model, knowledge}</code>；已在跑则提示并退出，不再开标签页</td></tr><tr><td>F-17c</td><td>窄屏下唯一子元素落进 0 宽列，文字被压成一字一行</td><td>640px 断点里 <code>grid-template-columns: 0 minmax(0,1fr)</code> + <code>.idx{display:none}</code></td><td>改单列；并给 <code>#caps</code> / <code>#how</code> 补 <code>scroll-margin-top:76px</code>，锚点不被吸顶栏遮住</td></tr></tbody></table></div>
+<p><strong>验收</strong></p>
+<ul>
+<li>Given <code>curl -I http://127.0.0.1:8501/</code>，When 检查，Then 200 而非 501。</li>
+<li>Given 服务已在 8501 跑着，When 再启动一次，Then 打印「已有一个实例在跑」并退出，浏览器不新增标签页。</li>
+<li>Given 375px 宽视口，When 渲染排查链，Then 文字正常换行、无横向溢出。</li>
+</ul>
+<hr class="doc-hr">
+<h2 id="h39">八、非功能需求</h2>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>类别</th><th>要求</th><th>依据</th></tr></thead><tbody><tr><td>依赖（运行）</td><td><strong>零第三方依赖</strong>，仅 Python 标准库；Python 3.9+</td><td><code>app.py</code> 无第三方 import</td></tr><tr><td>依赖（评测）</td><td><code>scripts/test_e2e.py</code> 需 <strong>Pillow</strong>（合成测试图）</td><td>仅开发期，不影响运行</td></tr><tr><td>部署形态</td><td>单进程 <code>ThreadingHTTPServer</code>，绑定 <strong>127.0.0.1:8501</strong>（<code>HOST</code> 硬编码本机）</td><td><code>app.py</code></td></tr><tr><td>生成稳定性</td><td><code>TEMPERATURE</code> 默认 <strong>0.2</strong>（排障要稳定，不调高）</td><td><code>.env</code> / <code>app.py</code></td></tr><tr><td>超时</td><td>单次调用 <strong>180s</strong></td><td><code>TIMEOUT</code></td></tr><tr><td>重试</td><td>解析失败重试 <strong>1 次</strong></td><td><code>PARSE_RETRY=true</code></td></tr><tr><td>响应时延</td><td><strong>未压测，不设承诺值</strong>；当前只有手感。⚠️ 待补：20 次连续请求的 P50/P95</td><td>无记录</td></tr><tr><td>结构合法率</td><td>100%（90/90 有效作答，0 失败；run <code>20261109-103703</code>）</td><td>summary</td></tr><tr><td>Agent 模式稳定性</td><td>77/90 有效（<strong>12 调用失败 + 1 需人工</strong>）——已移除该模式</td><td>run <code>20261111-135322</code></td></tr><tr><td>缓存</td><td>所有响应带 <code>Cache-Control: no-store</code></td><td><code>_send</code> / <code>_head</code></td></tr><tr><td>可访问性</td><td><code>aria-live="polite"</code> 播报排查状态；命令芯片可 Tab 聚焦；<code>:focus-visible</code> 2px 轮廓；<code>prefers-reduced-motion</code> 关闭入场位移</td><td><code>web/index.html</code></td></tr><tr><td>对比度</td><td>第三档文字 <code>#657078</code>：画布上 4.68:1、白底 5.07:1（旧值 <code>#77808b</code> 为 3.70:1/4.00:1，不达 AA，已修正）</td><td><code>DESIGN.md</code></td></tr><tr><td>响应式</td><td>1440 / 820 / 390 三档自查通过；640px 断点 bug 已修（F-17c）</td><td><code>DESIGN.md</code></td></tr><tr><td>字体</td><td>不引 Google Fonts（校园网不可靠，加载失败会毁首屏）；中文用系统字体，质感靠字号阶梯 + 字距 + 发丝线</td><td><code>DESIGN.md</code></td></tr><tr><td>数据留存</td><td>无持久化，刷新即丢；截图随请求转发至模型服务商；解析失败原文落 <code>data/failed/</code>（<strong>本地</strong>）</td><td>README / <code>_dump_failed</code></td></tr><tr><td>安全</td><td>API Key 只在 <code>.env</code>，已被 <code>.gitignore</code> 排除；不写入前端、不写入导出文件</td><td><code>.gitignore</code></td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h40">九、业务流程与状态流转</h2>
+<h3 id="h41">9.1 会话状态机</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>状态</th><th>含义</th><th>进入事件</th><th>允许操作</th><th>退出</th></tr></thead><tbody><tr><td>S0 空态</td><td>未排查</td><td>加载 / 刷新 / 重新开始</td><td>粘贴、拖拽、示例卡、输入文字</td><td>提交 → S1</td></tr><tr><td>S1 待验证</td><td>已给候选根因</td><td>模型返回可解析结果</td><td>复制命令、三按钮、追问</td><td>点按钮 → S2；追问 → S1</td></tr><tr><td>S2 排除中</td><td>≥1 条已处理</td><td>排除 / 试过没用</td><td>继续排除、点「就是这个」</td><td>确认 → S3；再提问 → S1</td></tr><tr><td>S3 已锁定</td><td>结论成立</td><td>用户确认且模型置 <code>是否锁定=true</code></td><td>复制结论操作、导出</td><td>重新开始 → S0</td></tr><tr><td>SX 解析失败</td><td>两次解析均失败</td><td>解析全挂</td><td>看原始输出、继续追问</td><td>追问 → S1</td></tr></tbody></table></div>
+<p><strong>约束</strong>：S3 只能由用户操作进入，模型不得单方面宣布；S2 不可跳过 S1。</p>
+<h3 id="h42">9.2 请求链路（含失败分支）</h3>
+<pre class="doc-pre"><code>前端 ask(text, withImages)
+  └→ POST /api/chat {messages, state}
+       ├→ ConfigError            → 400 {ok:false, error}
+       ├→ 请求体非法/空 messages → 400
+       ├→ 其他异常               → 500 {ok:false, error:"类型: 消息"}
+       └→ call_model()
+            ├→ render_knowledge(mode, 最后一条用户文本)  ← all/match/off
+            ├→ build_state_block(state)                 ← 独立 system message
+            ├→ HTTP 调用（180s 超时，temperature 0.2）
+            └→ parse_json_ex(raw)
+                 ├→ 成功 → postprocess() → {ok:true, raw, parsed, parse_error:""}
+                 └→ 失败 → [PARSE_RETRY] 带诊断重试 1 次
+                      ├→ 成功 → 同上
+                      └→ 失败 → 落盘 data/failed/ → {ok:true, parsed:null, parse_error}</code></pre>
+<hr class="doc-hr">
+<h2 id="h43">十、数据与埋点需求</h2>
+<h3 id="h44">10.1 本期数据能力</h3>
+<p>无埋点上报。数据能力由三部分替代：</p>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>数据</th><th>形态</th><th>用途</th></tr></thead><tbody><tr><td>评测集</td><td><code>data/eval-set.csv</code>（30 条 / 5 类，含标准根因、解法要点、预期追问、满分标准）</td><td>效果基线</td></tr><tr><td>泛化集</td><td><code>data/holdout-set.csv</code>（6 条口语化变体）</td><td>验证非「背答案」</td></tr><tr><td>运行记录</td><td><code>data/runs/&lt;时间戳&gt;/result.csv</code> + <code>summary.md</code></td><td>每次评测可复现、可对比</td></tr><tr><td>失败样本</td><td><code>data/failed/raw-*.txt</code></td><td>解析故障溯源</td></tr></tbody></table></div>
+<h3 id="h45">10.2 指标口径（必须写清，否则数字会被误读）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>指标</th><th>公式</th><th>陷阱</th></tr></thead><tbody><tr><td>满分命中率</td><td>得 2 分次数 ÷ 有效作答数</td><td>单次不可信：同配置两次跑出 39% 与 27%（差 12 个百分点）→ 必须 <code>--repeat 3</code></td></tr><tr><td>一致题数</td><td>3 次得分完全相同的题数 ÷ 总题数</td><td>与「稳定满分」不同：一致题里可能全是稳定的 1 分</td></tr><tr><td>稳定满分</td><td>3 次全 2 分</td><td>反映「答对且稳定」，比总命中率更有信息量</td></tr><tr><td>分类命中率</td><td>按 5 类分别统计</td><td>每类仅 6~8 条，只作方向判断</td></tr><tr><td>泛化率</td><td>holdout 6 条 × 3 次</td><td>区分「长知识」与「背答案」</td></tr></tbody></table></div>
+<p><strong>判分方法</strong>：LLM-as-judge，判分模型与作答模型<strong>故意不同厂商</strong>（作答 <code>qwen3-vl-plus</code> / 判分 <code>deepseek-v4.1-flash-1017</code>），避免自评放水；先做 2/1/0 已知答案校准；用语义判断而非关键词匹配（同一题多次措辞完全不同，字符串匹配会大量误判）。</p>
+<h3 id="h46">10.3 v2 埋点建议（待实施）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>事件</th><th>触发</th><th>字段</th></tr></thead><tbody><tr><td><code>session_start</code></td><td>首次请求</td><td>输入类型（图/文）、<code>KNOWLEDGE_MODE</code></td></tr><tr><td><code>cause_excluded</code> / <code>cause_tried</code></td><td>点对应按钮</td><td>根因文本哈希、轮次</td></tr><tr><td><code>conclusion_locked</code></td><td>点「就是这个」</td><td>轮次、累计排除数</td></tr><tr><td><code>export_md</code></td><td>点导出</td><td>是否已锁定、轮次数</td></tr><tr><td><code>parse_retry</code></td><td>解析重试</td><td>首次失败原因、修复项</td></tr><tr><td><code>card_hit</code></td><td><code>match</code> 模式命中</td><td>卡片 id、score</td></tr></tbody></table></div>
+<p><strong>为什么要 <code>card_hit</code></strong>：<code>match</code> 模式的关键词覆盖率目前不可观测，这是它输给 <code>all</code> 的原因却无法量化。</p>
+<hr class="doc-hr">
+<h2 id="h47">十一、权限与安全要求</h2>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>项</th><th>要求</th></tr></thead><tbody><tr><td>访问范围</td><td>服务只绑 <code>127.0.0.1</code>；<strong>未实现鉴权，不得暴露到局域网或公网</strong></td></tr><tr><td>密钥</td><td><code>API_KEY</code> 仅在 <code>.env</code>，<code>.gitignore</code> 已排除；不进 Git、不进作品集附件、不贴公开场合；若曾暴露，优先去服务商后台重置</td></tr><tr><td>用户数据</td><td>截图可能含 IP、设备名、拓扑；仅随请求转发至模型服务商，不落盘、不入库；导出文件由用户本地保存</td></tr><tr><td>失败样本</td><td><code>data/failed/</code> 存的是<strong>模型原始输出</strong>（可能含用户输入片段），仅本地保留，外发前须清理</td></tr><tr><td>路径安全</td><td><code>/assets/</code> 扩展名白名单 + 拒绝 <code>..</code> 与路径分隔符</td></tr><tr><td>内容安全</td><td>不建议「装安卓模拟器以毒攻毒」类偏方；除非用户主动问起，且必须说明风险（提示词规则 11 + <code>test_adversarial.py</code> E04）</td></tr><tr><td>责任边界</td><td>不自动执行任何配置变更；所有操作由用户确认后自行执行</td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h48">十二、异常处理清单</h2>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>#</th><th>异常</th><th>期望行为</th><th>现状</th></tr></thead><tbody><tr><td>E-01</td><td>模型输出带解释文字 / 代码块</td><td>剥围栏 + 截取花括号重试；自修复非法转义 / 控制字符 / 多余逗号</td><td>✅</td></tr><tr><td>E-02</td><td>两次解析均失败</td><td>落盘原文 + 前端展示原因与原始输出 + 保留追问入口</td><td>✅</td></tr><tr><td>E-03</td><td>模型调用超时（180s）</td><td>明确报错可重试，不静默转圈</td><td>✅</td></tr><tr><td>E-04</td><td>字段缺失 / 类型错误</td><td><code>postprocess()</code> 兜底为空列表/null，接口不 500</td><td>✅</td></tr><tr><td>E-05</td><td>根因超限（信息不足给 3 条）</td><td>服务端裁到 2 条</td><td>✅（提示词管不住）</td></tr><tr><td>E-06</td><td>字符串值内含半角双引号</td><td>解析层自修复，仍失败则 E-02</td><td>✅（提示词层已加约束，但不保证）</td></tr><tr><td>E-07</td><td>后端未启动 / 中途重启</td><td>「非 JSON 内容（HTTP x）」明确文案</td><td>✅</td></tr><tr><td>E-08</td><td>未配置 Key/BASE_URL</td><td>启动时打印警告；提问时 400 并说明缺项</td><td>✅</td></tr><tr><td>E-09</td><td>路径穿越</td><td>404</td><td>✅</td></tr><tr><td>E-10</td><td>全部根因被排除</td><td>往更深一层走，不换说法重复</td><td>✅（<code>test_session.py</code>）</td></tr><tr><td>E-11</td><td>同一端口重复启动</td><td>探活后复用已有实例，不新开标签</td><td>✅</td></tr><tr><td>E-12</td><td><code>HEAD</code> 请求</td><td>200 而非 501（否则探活方反复重载页面）</td><td>✅</td></tr><tr><td>E-13</td><td>图片过大 / 格式不支持</td><td>⚠️ 无前置校验，靠模型侧报错兜底</td><td>待补</td></tr><tr><td>E-14</td><td>断网</td><td>⚠️ 未做离线态专项验证</td><td>待补</td></tr><tr><td>E-15</td><td>刷新页面</td><td>会话丢失（已知限制）</td><td>接受</td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h49">十三、上线计划、依赖与上线后验证</h2>
+<h3 id="h50">13.1 依赖就绪度</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>依赖项</th><th>所属</th><th>分级</th><th>说明 / 最晚就绪</th><th>缺失时</th></tr></thead><tbody><tr><td>多模态模型服务（必须支持图片输入）</td><td>第三方 API</td><td><strong>阻塞</strong></td><td>已用 <code>qwen3-vl-plus</code> 跑通</td><td>换智谱 / 火山 / 硅基流动 / 月之暗面 / OpenAI（README 有对照表）</td></tr><tr><td><code>response_format</code> JSON 模式</td><td>第三方 API</td><td>并行</td><td>提升 JSON 合规率，非必需</td><td>关 <code>USE_JSON_MODE</code>，靠 FR-13 容错兜底</td></tr><tr><td>6 张知识卡片</td><td>本项目</td><td>并行</td><td>已就绪</td><td><code>KNOWLEDGE_MODE=off</code> 降级（但现象描述类回落到 0%）</td></tr><tr><td>判分模型（跨厂商）</td><td>第三方 API</td><td>可绕过</td><td>语义判分用</td><td>人工对照 <code>eval-set.xlsx</code> 打分</td></tr><tr><td>Pillow</td><td>开发环境</td><td>可绕过</td><td>仅 <code>test_e2e.py</code> 合成测试图</td><td>用真实截图替代合成图</td></tr></tbody></table></div>
+<h3 id="h51">13.2 演示路径</h3>
+<ol>
+<li><code>python probe.py</code> 自检（配置 / 模型列表 / 多模态测试）。</li>
+<li><code>python app.py</code> → 自动打开 <code>127.0.0.1:8501</code>。</li>
+<li>演示脚本：A01（报错码直读）→ C01（配置故障，<strong>含用户前提错误</strong>）→ D01（信息不足）→ 连续排除 4 条看收敛。</li>
+</ol>
+<h3 id="h52">13.3 上线后验证（= 每次改动的回归）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>检查项</th><th>命令</th><th>通过标准</th></tr></thead><tbody><tr><td>结构合规</td><td><code>python scripts/test_e2e.py</code></td><td>3/3</td></tr><tr><td>多轮收敛</td><td><code>python scripts/test_session.py</code></td><td>连排 4 条仍换方向</td></tr><tr><td>对抗性</td><td><code>python scripts/test_adversarial.py</code></td><td>不重复无效建议、无解要说无解、第三方偏方要提示风险</td></tr><tr><td>效果基线</td><td><code>python scripts/run_eval.py --repeat 3</code></td><td>与 <code>data/runs/</code> 上一版对比，不显著下降</td></tr><tr><td>领域幻觉</td><td>断言输出不含 <code>6.1.38</code> / 「升级 VirtualBox」</td><td>0 命中</td></tr><tr><td>服务健康</td><td><code>curl -I /</code></td><td>200（非 501）</td></tr></tbody></table></div>
+<h3 id="h53">13.4 后续版本规划</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>版本</th><th>内容</th><th>触发条件</th></tr></thead><tbody><tr><td>v0.3</td><td>卡片「必做动作」改 ①②③ 清单 + 提示词要求逐条覆盖</td><td>holdout 中 H04/H05 稳定漏「等 10 秒」「管理员运行」</td></tr><tr><td>v0.4</td><td>多轮只重发首轮图片，后续仅文本</td><td>当前每轮重发图片，token 随轮次线性上升</td></tr><tr><td>v0.5</td><td>卡片扩到 20+，切 <code>match</code> 并埋 <code>card_hit</code></td><td>卡片数 &gt; 20</td></tr><tr><td>v1.0</td><td>接 RAG + 强制给出处</td><td>长尾仍编造，且需要「可溯源」</td></tr><tr><td>v1.1</td><td>真实截图评测集替换文字描述</td><td>截图类分数目前偏乐观</td></tr></tbody></table></div>
+<hr class="doc-hr">
+<h2 id="h54">十四、风险与遗留问题</h2>
+<h3 id="h55">14.1 风险登记册（概率 × 影响，各 1–5）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>编号</th><th>风险</th><th>类别</th><th>概率</th><th>影响</th><th>值</th><th>应对</th></tr></thead><tbody><tr><td>RK-01</td><td><strong>评测集与知识卡片同源</strong>：6 张卡片是照着 6 道题写的，严格说是训练集/测试集重合</td><td>数据</td><td>5</td><td>4</td><td><strong>20 高</strong></td><td>已用 holdout 变体验证（78%，与原题 78% 一致，失败题同属 B04/B05）；但仍非真实日志，需继续扩变体</td></tr><tr><td>RK-02</td><td><strong>领域幻觉</strong>：模型自信地给出反常识错误（建议升 VirtualBox 6.1.38，实际会废掉 eNSP）</td><td>技术</td><td>4</td><td>5</td><td><strong>20 高</strong></td><td>领域事实写进提示词 + 自动断言判 0；<strong>已证明纯提示词无效</strong>，必须靠断言</td></tr><tr><td>RK-03</td><td><strong>配置故障类最弱（33%）</strong>：失分几乎都是「漏最后一个具体动作」或「失效点不足 3 个」</td><td>内容</td><td>5</td><td>4</td><td><strong>20 高</strong></td><td>卡片改成清单式、提示词要求逐条覆盖；这是内容层问题，不用换模型</td></tr><tr><td>RK-04</td><td><strong>稳定性倒退</strong>：一致题数 19/30（63%）→ 15/30（50%）；11~15 道题在相邻档位跳</td><td>数据</td><td>4</td><td>4</td><td>16 高</td><td>强制 <code>--repeat 3</code> 报区间；对外不承诺单次数字；卡片可能让答案「更像模板」导致 1↔2 抖动</td></tr><tr><td>RK-05</td><td><strong>评分口径与产品要求冲突</strong>：产品要求信息不足时给 1~2 条假设，评分规则却把「一边追问一边下结论」判 1 分</td><td>需求</td><td>5</td><td>3</td><td>15 高</td><td>见 14.2，需裁决；在此之前「信息不足」类 50% 是口径造成的上限</td></tr><tr><td>RK-06</td><td>误导陷阱类加卡片后 58% → 42%（12 条样本，噪声范围内但方向可疑）</td><td>技术</td><td>3</td><td>4</td><td>12 中</td><td>卡片可能诱导「对任何问题套固定答案」；持续观察，必要时对陷阱类禁用卡片</td></tr><tr><td>RK-07</td><td>样本量小（30 条、每类 6~8 条），置信区间宽</td><td>数据</td><td>5</td><td>2</td><td>10 中</td><td>所有结论标注「方向判断，不作效果承诺」</td></tr><tr><td>RK-08</td><td>多轮重发首轮图片，token 随轮次线性上升</td><td>技术</td><td>5</td><td>2</td><td>10 中</td><td>v0.4 改为首轮图片 + 后续仅文本</td></tr><tr><td>RK-09</td><td>密钥误提交 / 曾暴露在截图中</td><td>合规</td><td>2</td><td>5</td><td>10 中</td><td><code>.gitignore</code> + 交付前检查；外泄优先轮换</td></tr><tr><td>RK-10</td><td>单点依赖第三方 API，变更或限流即不可用</td><td>进度</td><td>3</td><td>3</td><td>9 中</td><td>README 提供 6 家对照表</td></tr><tr><td>RK-11</td><td><code>data/failed/</code> 可能存到用户输入片段，外发作品集时被带出</td><td>合规</td><td>3</td><td>3</td><td>9 中</td><td>打包前清空该目录（已生成 1 份真实失败样本）</td></tr><tr><td>RK-12</td><td>「信息是否充分」被过度使用（永远说不足，靠追问逃避判断）</td><td>体验</td><td>2</td><td>3</td><td>6 低</td><td>提示词要求信息不足也必须给假设；观察追问轮次分布</td></tr></tbody></table></div>
+<h3 id="h56">14.2 一处必须裁决的口径冲突（本版新增）</h3>
+<p><strong>事实</strong>：<code>SYSTEM_PROMPT</code> 规则 10 要求「即使信息不足，也必须给 1~2 条待确认假设」；而 <code>run_eval.py</code> 的判分规则写的是「追问 ≥2 条<strong>且不下结论</strong> = 2 分；一边追问一边下结论 = 1 分」。</p>
+<p><strong>后果</strong>：run <code>20261109-103703</code> 里 D02/D03/D04/D05/D06 的 1 分理由几乎全是同一句——「属于一边追问一边下结论」。产品在<strong>严格执行自己的设计</strong>，却因此被扣分。信息不足类 9/18 的天花板，有一部分是口径造成的，不是能力造成的。</p>
+<p><strong>两条出路（需要拍板）</strong>：</p>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>方案</th><th>改什么</th><th>代价</th><th>影响面</th></tr></thead><tbody><tr><td>① 改评分规则</td><td>评分承认「追问 + 假设」是正确行为，只要假设标了「待确认」即给 2 分</td><td>评测标准要重跑，历史分数不可直接对比</td><td>信息不足类分数会上升</td></tr><tr><td>② 改产品行为</td><td>信息不足时只给方向不给概率、不给验证命令</td><td>与 v0.2 的「用户需要知道最可能是哪个方向」相冲突</td><td>可能伤害实际体验</td></tr></tbody></table></div>
+<p><strong>建议</strong>：选 ①。理由是「信息不足时给一条待确认的假设」正是本产品相对文档的核心价值（问诊而不是查表），不该在评测里被惩罚。<strong>但这是产品判断，不是评测技术问题</strong>，所以在裁决前，PRD 不把「信息不足类 50%」当作能力上限来承诺。</p>
+<h3 id="h57">14.3 遗留问题</h3>
+<ol>
+<li><strong>截图类分数不是最终数</strong>：评测用文字描述代替截图，补真实截图后需重跑。</li>
+<li><strong>首次 A/B 实验曾整体失效</strong>：<code>run_eval.py</code> 手工拼 messages 绕过了 <code>call_model</code> 里的卡片注入，两组都是 0/18。修法是把注入抽成 <code>build_system_messages()</code>，评测走生产路径。<strong>教训：评测必须跑线上那条代码路径；而且两次结果「一致」看起来像「无效」而不是「故障」，极难发现。</strong></li>
+<li><strong>卡片 &gt;20 张时的行为未验证</strong>：<code>match</code> 是否反超，无数据。</li>
+<li><strong>Agent 模式已删除但代码留痕</strong>：run 记录里仍有 <code>AGENT_MODE=agent</code>、工具调用统计，属于实验档案，不代表当前能力。</li>
+</ol>
+<hr class="doc-hr">
+<h2 id="h58">十五、附录</h2>
+<h3 id="h59">15.1 评测运行台账（全部可回溯）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>阶段</th><th>run 目录</th><th>用例 × 重复</th><th>满分率</th><th>现象描述</th><th>配置故障</th><th>信息不足</th><th>误导陷阱</th><th>一致题数</th><th>平均分</th></tr></thead><tbody><tr><td>加卡片前</td><td><code>20261109-100456</code></td><td>30 × 3 = 90</td><td>28/90 = <strong>31%</strong></td><td>0/18 = 0%</td><td>7/24 = 29%</td><td>5/18 = 28%</td><td>7/12 = 58%</td><td>19/30</td><td>1.21</td></tr><tr><td>加卡片后</td><td><code>20261109-103703</code></td><td>30 × 3 = 90</td><td>45/90 = <strong>50%</strong></td><td>14/18 = 78%</td><td>8/24 = 33%</td><td>9/18 = 50%</td><td>5/12 = 42%</td><td>15/30</td><td>1.47</td></tr><tr><td>泛化 holdout</td><td><code>20261109-105500</code></td><td>6 × 3 = 18</td><td>14/18 = <strong>78%</strong></td><td>78%</td><td>—</td><td>—</td><td>—</td><td>4/6</td><td>1.78</td></tr><tr><td>Agent 单次</td><td><code>20261111-134835</code></td><td>30 × 1 = 30</td><td>12/30 = 40%</td><td>5/6 = 83%</td><td>1/8 = 12%</td><td>2/6 = 33%</td><td>1/4 = 25%</td><td>—</td><td>1.30</td></tr><tr><td>Agent 3 次</td><td><code>20261111-135322</code></td><td>30 × 3（<strong>12 失败</strong>）</td><td>35/77 = 45%</td><td>15/18 = 83%</td><td>7/24 = 29%</td><td>5/17 = 29%</td><td>—</td><td>—</td><td>1.44</td></tr><tr><td>Agent 陷阱专项</td><td><code>20261111-140402</code></td><td>4 × 3 = 12</td><td>6/12 = 50%</td><td>—</td><td>—</td><td>—</td><td>50%</td><td>2/4</td><td>1.33</td></tr></tbody></table></div>
+<blockquote class="doc-quote">早于 <code>20261109-100456</code> 的 5 份 run（<code>20261108-*</code>）为建集/调试期记录，样本不完整，不作为结论依据。</blockquote>
+<h3 id="h60">15.2 需求追踪矩阵（RTM）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>需求</th><th>实现位置</th><th>验证</th></tr></thead><tbody><tr><td>FR-01 输入</td><td><code>web/index.html</code>（<code>addFiles</code> / <code>paste</code> 监听 / <code>S.images</code>）</td><td>手工</td></tr><tr><td>FR-02 输出契约</td><td><code>app.py</code> <code>SYSTEM_PROMPT</code></td><td><code>test_e2e.py</code></td></tr><tr><td>FR-03 根因规则</td><td>提示词规则 2/3/4/7/8 + <code>postprocess()</code></td><td>断言 A-02/A-03/A-04</td></tr><tr><td>FR-04 追问</td><td>提示词规则 5/10</td><td>D01 用例、D 类评测</td></tr><tr><td>FR-05 反馈回灌</td><td><code>build_state_block()</code> + <code>S.excluded/S.tried</code></td><td><code>test_session.py</code></td></tr><tr><td>FR-06 锁定</td><td>提示词规则 12 + <code>hop-actions confirm</code></td><td><code>test_session.py</code> 第 4 轮</td></tr><tr><td>FR-07 命令复制</td><td><code>fmt()</code> + <code>copyText()</code> + keydown 分支</td><td>手工</td></tr><tr><td>FR-08 导出</td><td><code>$('export').onclick</code></td><td>手工</td></tr><tr><td>FR-09 空态/示例</td><td><code>EMPTY_HTML</code> / <code>examples</code> / <code>loadingHTML()</code></td><td>手工</td></tr><tr><td>FR-10 台账</td><td><code>renderProgress()</code></td><td>手工</td></tr><tr><td>FR-11 卡片注入</td><td><code>knowledge_cards.py</code> <code>render_knowledge()</code></td><td>三种模式 A/B</td></tr><tr><td>FR-12 收口</td><td><code>postprocess()</code></td><td>断言 A-02</td></tr><tr><td>FR-13 JSON 容错</td><td><code>parse_json_ex</code> / <code>_sanitize_json_text</code> / <code>_dump_failed</code></td><td><code>data/failed/</code> 样本 + A-01</td></tr><tr><td>FR-14 错误呈现</td><td><code>ask()</code> catch 分支 / <code>render()</code> 无 parsed 分支</td><td>手工</td></tr><tr><td>FR-15 资源白名单</td><td><code>read_asset()</code></td><td>手工穿越请求</td></tr><tr><td>FR-16 证据分级</td><td><code>knowledge_cards.py</code> 字段 <code>复核</code> + 注入声明</td><td>手工</td></tr><tr><td>FR-17 健壮性</td><td><code>do_HEAD</code> / <code>_ours_running</code> / 响应式断点</td><td><code>curl -I</code>、重复启动、窄屏自查</td></tr></tbody></table></div>
+<h3 id="h61">15.3 AI 功能专项（六模块）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>模块</th><th>本产品的定义</th></tr></thead><tbody><tr><td><strong>任务定义</strong></td><td>学生拿着「出问题的现象」，需要知道「先试哪个、风险多大」；当前成本是翻文档/问人；AI 帮到的程度是<strong>排序后的假设 + 验证动作</strong>，不到「直接执行」</td></tr><tr><td><strong>输入契约</strong></td><td>截图（报错弹窗 / CLI 回显 / 拓扑）+ 文字；图片优先于文字；缺关键信息时追问而非硬答；超长输入靠「一次只问最关键的」收敛</td></tr><tr><td><strong>输出契约</strong></td><td>固定 JSON 10 字段；<code>验证方法</code> 必为可执行动作；<code>依据</code> 不确定时须写「基于常见故障模式，待验证」；结构化字段优于自由文本（否则无法评测）</td></tr><tr><td><strong>质量标准</strong></td><td>维度：结构合法性 100%、根因排序正确、验证方法可执行、风险标注齐全、不编命令、证据等级可见；样本覆盖：常见/缺失/口径冲突/误导/边界/拒答；阈值：满分率 ≥50%（当前 50%）、现象描述类 ≥70%（当前 78%）、配置故障类 ≥50%（当前 33%，<strong>未达标</strong>）</td></tr><tr><td><strong>异常降级</strong></td><td>低置信 → 明示「低」并追问；无解场景直说「大概率无解」并给替代方案；解析失败 → 重试一次后明确报错并保留原文；<strong>不接受统一「系统繁忙」</strong></td></tr><tr><td><strong>反馈与闭环</strong></td><td>字段级：三按钮即「哪条被排除 / 哪条试过无效」；每条结果关联知识卡片模式、卡片版本与模型名，可复现（<code>data/runs/</code>）</td></tr></tbody></table></div>
+<h3 id="h62">15.4 文档与数据不一致清单（本版核对出来的）</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>#</th><th>文档写的</th><th>run 记录写的</th><th>处理</th></tr></thead><tbody><tr><td>1</td><td>README：「Agent 41/89 = 46%（95% CI 36%–56%）」</td><td><code>20261111-135322</code>：35/77 = 45%，且 <strong>12 次调用失败 + 1 需人工</strong></td><td>本 PRD 用 run 记录，并补充失败率。README 的 41/89 可能来自另一轮未留存或已覆盖的 run</td></tr><tr><td>2</td><td>README：「稳定性只有 63%（19/30）」（指加卡片前）</td><td>加卡片后一致题数 <strong>15/30（50%）</strong>，README 未提这一项</td><td>本 PRD 在 2.3 明确标为「未达成」</td></tr><tr><td>3</td><td>README：「稳定满分 5/30 → 9/30」</td><td>summary 只给「得分完全一致题数」，未直接给稳定满分</td><td>两者口径不同（前者含稳定 1 分题），本 PRD 分列两个指标，不混用</td></tr><tr><td>4</td><td>v1.0 PRD：「首轮生成 ≤15s（目标值）」</td><td>无任何时延记录</td><td>本版删除该目标值，改为「未压测，不设承诺」</td></tr></tbody></table></div>
+<blockquote class="doc-quote">这四条不建议直接改 README（那是流水账式实验记录，有史料价值），但<strong>对外材料（简历、作品集、面试口述）必须用本表右列的数字</strong>，否则被追问时对不上。</blockquote>
+<h3 id="h63">15.5 关键数值索引</h3>
+<div class="doc-md-scroll"><table class="doc-md-table"><thead><tr><th>数值</th><th>含义</th><th>出处</th></tr></thead><tbody><tr><td>30 / 5</td><td>评测集条数 / 分类数</td><td><code>data/eval-set.csv</code></td></tr><tr><td>90</td><td>30 × 3 次重复</td><td>run <code>20261109-*</code></td></tr><tr><td>31% → 50%</td><td>加卡片前后满分率</td><td>两份 summary</td></tr><tr><td>0% → 78%</td><td>现象描述类满分率</td><td>同上</td></tr><tr><td>58% → 42%</td><td>误导陷阱类（下降）</td><td>同上</td></tr><tr><td>19/30 → 15/30</td><td>一致题数（下降）</td><td>同上</td></tr><tr><td>89% vs 78%</td><td><code>all</code> vs <code>match</code>（6 条专项）</td><td>README 知识卡片实验</td></tr><tr><td>78%</td><td>holdout（14/18）</td><td>run <code>20261109-105500</code></td></tr><tr><td>45% / 12 失败</td><td>Agent 3 次重复</td><td>run <code>20261111-135322</code></td></tr><tr><td>6</td><td>知识卡片数</td><td><code>knowledge_cards.py</code></td></tr><tr><td>3/3</td><td>端到端结构校验</td><td><code>scripts/test_e2e.py</code></td></tr></tbody></table></div>
+<hr class="doc-hr">
+<blockquote class="doc-quote">本方案为产品设计参考，具体实施请结合公司合规与法务要求确认。</blockquote>
+    </div>
     <footer class="doc-foot">
-      <a href="project-ensp.html">← 回到案例页</a>
-      <span>脱敏版 · 结构与口径来自真实项目文档</span>
+      <a href="index.html#projects">← 回到作品集</a>
+      <span>脱敏版 · 原始文档为 Markdown，此页为等宽渲染</span>
     </footer>
-
   </article>
 </main>
 
