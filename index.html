@@ -211,9 +211,25 @@
           <a class="btn btn-glass" href="assets/resume.pdf" download="王雁鹏-简历-AI产品实习生.pdf">简历 PDF <span class="arw">↓</span></a>
         </div>
       </div>
+
+      <div class="contact-info" aria-label="联系方式">
+        <div class="ci-row">
+          <span class="ci-k">电话 / 微信</span>
+          <a class="ci-v" href="tel:15238212663">152 3821 2663</a>
+          <span class="ci-tag">微信同号</span>
+          <button class="ci-copy" type="button" data-copy="15238212663">复制</button>
+        </div>
+        <div class="ci-row">
+          <span class="ci-k">邮箱</span>
+          <a class="ci-v" href="mailto:2748916664@qq.com">2748916664@qq.com</a>
+          <span class="ci-tag">24 小时内回</span>
+          <button class="ci-copy" type="button" data-copy="2748916664@qq.com">复制</button>
+        </div>
+      </div>
+
       <footer>
         <span>© 2026 王雁鹏 · AI 产品作品集</span>
-        <span>用评测说话</span>
+        <span>152 3821 2663 · 2748916664@qq.com</span>
       </footer>
     </div>
   </section>
@@ -229,6 +245,28 @@
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  // 联系方式一键复制
+  document.querySelectorAll('.ci-copy').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy || '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        try { document.execCommand('copy'); } catch {}
+        ta.remove();
+      }
+      const old = btn.textContent;
+      btn.textContent = '已复制';
+      btn.classList.add('is-done');
+      setTimeout(() => { btn.textContent = old; btn.classList.remove('is-done'); }, 1600);
+    });
+  });
   // 键盘用户：跳到主要内容后顶部导航保持可见
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {

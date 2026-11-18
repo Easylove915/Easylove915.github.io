@@ -814,3 +814,48 @@ section[id]{scroll-margin-top:96px}
 
 .doc-h1{margin:8px 0 2px; font-family:var(--font-display); font-weight:400; font-size:clamp(28px,3.4vw,42px); line-height:1.15; letter-spacing:-.02em}
 .doc-md-table th:first-child{min-width:92px}
+/* ---------- 联系方式（可读 + 可复制） ---------- */
+.contact-info{
+  display:flex; flex-direction:column; gap:0;
+  margin:var(--sp-24) 0 0; padding:2px 22px;
+  border:1px solid var(--line); border-radius:18px;
+  background:rgba(7,26,38,.55);
+  -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+}
+.ci-row{
+  display:grid; grid-template-columns:110px minmax(0,1fr) auto auto;
+  align-items:center; gap:16px;
+  padding:16px 2px; border-bottom:1px solid var(--line);
+}
+.ci-row:last-child{border-bottom:0}
+.ci-k{font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-faint)}
+.ci-v{
+  font-family:var(--font-num); font-variant-numeric:tabular-nums lining-nums;
+  font-size:clamp(17px,1.9vw,22px); letter-spacing:.02em; color:#fff;
+  text-decoration:none; transition:color .2s;
+}
+.ci-v:hover{color:var(--glow); text-decoration:underline; text-underline-offset:4px}
+.ci-tag{
+  font-size:11px; padding:3px 9px; border-radius:999px;
+  border:1px solid var(--line-strong); color:var(--ink-dim); white-space:nowrap;
+}
+.ci-copy{
+  appearance:none; cursor:pointer;
+  font:inherit; font-size:11.5px; letter-spacing:.04em;
+  padding:6px 12px; border-radius:999px;
+  border:1px solid var(--line-strong); background:rgba(255,255,255,.06);
+  color:var(--ink-soft); transition:background .2s, color .2s, border-color .2s;
+}
+.ci-copy:hover{background:rgba(255,255,255,.12); color:#fff}
+.ci-copy.is-done{border-color:rgba(159,216,239,.6); color:#cfeaf9; background:rgba(159,216,239,.14)}
+
+@media (max-width:760px){
+  .ci-row{grid-template-columns:1fr auto; gap:6px 12px; padding:14px 2px}
+  .ci-k{grid-column:1 / -1; font-size:10.5px}
+  .ci-v{font-size:18px}
+  .ci-tag{grid-column:1; justify-self:start}
+  .ci-copy{grid-row:2; grid-column:2}
+}
+
+.foot-contact a{color:var(--ink-soft); text-decoration:none; border-bottom:1px solid transparent}
+.foot-contact a:hover{color:#fff; border-bottom-color:rgba(255,255,255,.4)}
