@@ -68,13 +68,13 @@
     <div class="detail">
       <div class="detail-main">
         <section>
-          <h2>它解决什么</h2>
+          <h2 id="solve">它解决什么</h2>
           <p>学生在 eNSP 里配不通时，缺的不是资料，而是“先试哪个、哪个有风险”。当时的 eNSP 资料里，约 90% 的篇幅在讲安装和汉化，真正卡住人的配置故障几乎空白。</p>
           <p>所以我把它从“资料汇总”改成“按现象定位原因”：用户描述现象（或贴报错图），它给出几条可能的根因，按概率排序，并给每条根因配一个能立刻做的验证动作。</p>
         </section>
 
         <section>
-          <h2>怎么做的</h2>
+          <h2 id="build">怎么做的</h2>
           <ul>
             <li><strong>先收范围。</strong>拆完两份现有资料后确认 90% 是安装类问题，于是不做“知识库问答”，只做“按现象定位原因”。</li>
             <li><strong>把风险写进答案。</strong>竞品把「改 BIOS」和「删注册表」平级罗列，用户不知道哪个能碰；这里每条根因并排给出风险等级（安全 / 需备份 / 高风险）与可执行验证方法。</li>
@@ -85,7 +85,7 @@
         </section>
 
         <section>
-          <h2>证据</h2>
+          <h2 id="proof">证据</h2>
           <div class="evidence">
             <div><b>90</b><span>次评测作答（30 条 × 3 次重复）</span></div>
             <div><b>0<span class="num-arrow">→</span>78%</b><span>补 6 张知识卡后，定位类满分率</span></div>
@@ -96,7 +96,7 @@
         </section>
 
         <section>
-          <h2>评测集怎么建的</h2>
+          <h2 id="eval">评测集怎么建的</h2>
           <p>30 条评测集按 5 类拆开，每类 6 条，每条跑 3 次——同一套问题重复测，才能区分“偶然答对”和“稳定答对”。</p>
           <table class="eval-table">
             <colgroup><col style="width:19%"><col style="width:7%"><col style="width:24%"><col style="width:29%"><col style="width:10.5%"><col style="width:10.5%"></colgroup>
@@ -147,7 +147,7 @@
         </section>
 
         <section>
-          <h2>界面截图</h2>
+          <h2 id="ui">界面截图</h2>
           <div class="shots">
             <figure class="shot">
               <img src="assets/shot-ensp-home.webp" alt="eNSP 排障助手首页：贴一张报错截图" loading="lazy" decoding="async">
@@ -170,7 +170,7 @@
         </section>
 
         <section class="callout">
-          <h2>它不做什么</h2>
+          <h2 id="nongoal">它不做什么</h2>
           <p>不是自动维修系统，不会替用户改配置；不承诺“唯一正确答案”，只给按概率排序、带风险等级的路径；不替代实验课和老师。公开版只用脱敏案例。</p>
         </section>
       </div>

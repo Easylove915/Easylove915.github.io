@@ -633,7 +633,7 @@ footer{padding:var(--sp-48) 0 var(--sp-64); color:var(--ink-faint); font-size:12
 }
 .about-text strong{font-weight:400; color:#cfeaf9}
 
-section[id]{scroll-margin-top:96px}
+section[id],h2[id]{scroll-margin-top:110px}
 
 /* 正文中的阿拉伯数字：与全局数字同字面，避免衬线字体里的旧式/比例数字显得参差 */
 .about-text .num,.hero-lede .num{font-size:.94em; letter-spacing:0}
@@ -883,3 +883,20 @@ section[id]{scroll-margin-top:96px}
 .case-link--alt{margin-left:auto; flex:none !important; justify-content:flex-end; gap:8px; color:var(--ink-faint)}
 .case-link--alt:hover{color:#fff}
 @media (max-width:640px){ .case-links{flex-direction:column; align-items:stretch; gap:8px} .case-link--alt{justify-content:space-between} }
+/* 能力卡：证据回指 */
+.cap-card{display:flex; flex-direction:column}
+.cap-ev{
+  display:flex; flex-direction:column; gap:6px;
+  margin-top:auto; padding-top:14px;
+  border-top:1px solid var(--line);
+}
+.cap-ev a{
+  display:inline-flex; align-items:center; gap:6px;
+  font-size:11.5px; line-height:1.5; color:var(--ink-faint);
+  text-decoration:none; transition:color .2s;
+}
+.cap-ev a:hover{color:var(--glow)}
+.cap-ev a .arw{font-size:11px; opacity:.7; transition:transform .25s}
+.cap-ev a:hover .arw{transform:translate(2px,-2px); opacity:1}
+.cap-ev + .cap-ev{margin-top:0}
+.cap-card p{margin-bottom:14px !important}

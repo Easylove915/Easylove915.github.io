@@ -68,12 +68,12 @@
     <div class="detail">
       <div class="detail-main">
         <section>
-          <h2>它解决什么</h2>
+          <h2 id="solve">它解决什么</h2>
           <p>应届生投简历时真正要判断的不是“我有多匹配”，而是三件能立刻行动的事：这个岗值不值得投、面试会在哪被问穿、我有哪些能核对的事实。市面上的工具给一个“对齐度 37 分”，用户拿着这个数既做不了决定，还容易误读成录用率。</p>
         </section>
 
         <section>
-          <h2>怎么做的</h2>
+          <h2 id="build">怎么做的</h2>
           <ul>
             <li><strong>推翻自己的输出层。</strong>首版主输出是“对齐度 37 分”，内测发现没人能据此决策；引擎一行未改，只重做输出层，换成投递决策 / 面试追问 / 事实账本三件能直接行动的产物。</li>
             <li><strong>把两件事拆开。</strong>“做过类似的事吗”和“够不够格”是两层：学历、届别、到岗天数、实习时长单独做二元校验，任一不符直接判“别投”，因为改简历救不了。</li>
@@ -84,7 +84,7 @@
         </section>
 
         <section>
-          <h2>证据</h2>
+          <h2 id="proof">证据</h2>
           <div class="evidence">
             <div><b>238</b><span>项单测，全部通过</span></div>
             <div><b>20</b><span>个纯函数规则模块</span></div>
@@ -95,13 +95,13 @@
         </section>
 
         <section>
-          <h2>过程物</h2>
+          <h2 id="artifact">过程物</h2>
           <p>这个产品的核心设计决定是「责任边界」：硬性条件、证据覆盖、编号校验全部交给纯函数规则引擎，模型只负责文本改写与 OCR，输出不参与判定。完整规则、验收标准与风险登记都写在 PRD 里。</p>
           <p style="margin-top:18px"><a class="btn btn-glass" href="prd-jd.html">看完整 PRD<span class="arw">↗</span></a></p>
         </section>
 
         <section>
-          <h2>界面截图</h2>
+          <h2 id="ui">界面截图</h2>
           <div class="shots">
             <figure class="shot">
               <img src="assets/shot-jd-empty.webp" alt="投递决策器的初始界面：输入、决策、面试与建议三栏" loading="lazy" decoding="async">
@@ -116,7 +116,7 @@
         </section>
 
         <section class="callout">
-          <h2>它不做什么</h2>
+          <h2 id="nongoal">它不做什么</h2>
           <p>不替用户编经历；不猜“没写”的条件；不给录用概率，只给能不能投和该补什么；不把关卡判断交给模型。</p>
         </section>
       </div>
