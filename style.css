@@ -874,4 +874,6 @@ section[id]{scroll-margin-top:96px}
 .toast.is-on{opacity:1; transform:translateY(0)}
 @media (max-width:640px){ .toast{bottom:20px; font-size:12.5px; padding:10px 14px} }
 
-.contact-hint{margin:10px 0 0; font-size:11.5px; line-height:1.6; color:var(--ink-faint); max-width:24em}
+.contact-side{display:flex; flex-direction:column; align-items:flex-end; gap:10px}
+.contact-hint{margin:0; font-size:11.5px; line-height:1.6; color:var(--ink-faint); max-width:26em; text-align:right}
+@media (max-width:760px){ .contact-side{align-items:flex-start} .contact-hint{text-align:left} }
