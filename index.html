@@ -209,6 +209,7 @@
           <a class="btn btn-primary" href="mailto:2748916664@qq.com">发邮件 <span class="arw">↗</span></a>
           <a class="btn btn-glass" href="tel:15238212663">打电话</a>
           <a class="btn btn-glass" href="assets/resume.pdf" download="王雁鹏-简历-AI产品实习生.pdf">简历 PDF <span class="arw">↓</span></a>
+          <p class="contact-hint">没装邮件客户端也没关系：点按钮会把号码 / 邮箱复制到剪贴板，直接粘贴即可。</p>
         </div>
       </div>
 
@@ -245,28 +246,6 @@
   addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // 联系方式一键复制
-  document.querySelectorAll('.ci-copy').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const text = btn.dataset.copy || '';
-      try {
-        await navigator.clipboard.writeText(text);
-      } catch {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        try { document.execCommand('copy'); } catch {}
-        ta.remove();
-      }
-      const old = btn.textContent;
-      btn.textContent = '已复制';
-      btn.classList.add('is-done');
-      setTimeout(() => { btn.textContent = old; btn.classList.remove('is-done'); }, 1600);
-    });
-  });
   // 键盘用户：跳到主要内容后顶部导航保持可见
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
@@ -278,5 +257,6 @@
     });
   });
 </script>
+<script src="site.js" defer></script>
 </body>
 </html>
