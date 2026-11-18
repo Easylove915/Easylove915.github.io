@@ -900,3 +900,12 @@ section[id],h2[id]{scroll-margin-top:110px}
 .cap-ev a:hover .arw{transform:translate(2px,-2px); opacity:1}
 .cap-ev + .cap-ev{margin-top:0}
 .cap-card p{margin-bottom:14px !important}
+/* 关于：差异化一句 */
+.about-claim{
+  margin:var(--sp-24) 0 0; padding-left:18px;
+  border-left:2px solid rgba(159,216,239,.65);
+  font-family:var(--font-display); font-weight:400;
+  font-size:clamp(16px,1.55vw,21px); line-height:1.7; color:#fff;
+  max-width:36em; text-shadow:0 2px 22px rgba(3,16,24,.55);
+}
+.about-claim .num{font-size:.92em}
